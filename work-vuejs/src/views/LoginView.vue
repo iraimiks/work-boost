@@ -62,11 +62,11 @@ export default {
         if (res.data.status === 'logined') {
           window.location.href = '/user/' + res.data.id
         } else {
-          console.log('problems')
+          console.log('problems');
         }
       }).catch((error) => 
         {
-          console.log(error)
+          console.log(error);
         }
       );
     },

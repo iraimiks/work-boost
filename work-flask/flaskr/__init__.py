@@ -13,6 +13,7 @@ app.secret_key = config.appsecret
 db = SQLAlchemy(app)
 CORS(app)
 
-from flaskr import route, auth
+from flaskr import auth, manage
 
 app.register_blueprint(auth.bp)
+app.register_blueprint(manage.bp)
