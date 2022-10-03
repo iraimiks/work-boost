@@ -18,8 +18,8 @@
           <td>{{ item.phone }}</td>
           <td>{{ item.create_date }}</td>
           <td>
-            <router-link to="/dashboard/"
-              >Registrēt klientu</router-link
+            <router-link :to="'/dashboard/customers/' + item.id "
+              >Klienta lapa</router-link
             >
           </td>
         </tr>
@@ -47,7 +47,6 @@ export default {
         .get("/customer/list")
         .then((res) => {
           this.customers = res.data.customers;
-          console.log(this.customers);
         })
         .catch((error) => {
           console.log(error);

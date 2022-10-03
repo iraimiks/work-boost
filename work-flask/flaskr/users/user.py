@@ -10,3 +10,10 @@ class User(db.Model):
         self.user_role = user_role
         self.username = username
         self.password = generate_password_hash(password)
+    @property
+    def serialized(self):
+        return {
+            'id': self.id,
+            'username': self.username,
+            'user_role': self.user_role,
+        }

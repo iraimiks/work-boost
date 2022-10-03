@@ -4,6 +4,9 @@ import LoginView from '../views/LoginView.vue'
 import CustomerRegView from '../views/userview/CustomerRegView.vue'
 import UserView from '../views/userview/UserView.vue'
 import CustomersView from '../views/userview/CustomersView.vue'
+import CustomerView from '../views/customerview/CustomerView.vue'
+import CarView from '../views/customerview/CustomerCar.vue'
+import OrderView from '../views/customerview/OrderView.vue'
 const routes = [
   {
     path: '/',
@@ -32,9 +35,21 @@ const routes = [
       {
         path: 'customers',
         component: CustomersView,
+      },
+      {
+        path: 'customers/:id',
+        component: CustomerView,
+      },
+      {
+        path: '/:custid/car/:id',
+        component: CarView,
+      },
+      {
+        path: '/order/:id',
+        component: OrderView,
       }
     ]
-  }
+  },
 ]
 
 const router = createRouter({
