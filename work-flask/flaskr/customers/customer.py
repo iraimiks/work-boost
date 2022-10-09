@@ -14,7 +14,7 @@ class Customer(db.Model):
     def serialized(self):
         return {
             'id': self.id,
-            'customer_name': self.customer_name,
+            'name': self.customer_name,
             'phone': self.phone,
             'create_date': self.create_date 
         }

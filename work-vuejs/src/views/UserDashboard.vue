@@ -10,6 +10,9 @@
               <router-link to="/dashboard/customerreg">Registrēt klientu</router-link>
             </li>
             <li>
+              <router-link to="/dashboard/workerreg">Registrēt darbinieku</router-link>
+            </li>
+            <li>
               <router-link to="/dashboard/customers">Klienti</router-link>
             </li>
             <li>

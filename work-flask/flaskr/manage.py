@@ -60,7 +60,7 @@ def customer(id):
 @bp.route('/workers', methods=('GET', 'POST'))
 def workers():
     if request.method == 'GET':
-        workers = User.query.filter_by(user_role="wo_user").all()
+        workers = User.query.filter_by(user_role="worker").all()
         return jsonify({'workers': [worker.serialized for worker in workers]})
 
 @bp.route('/order', methods=('GET', 'POST'))
