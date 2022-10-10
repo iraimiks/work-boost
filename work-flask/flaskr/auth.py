@@ -27,13 +27,14 @@ def login():
         json_data = request.get_json()
         username = json_data['username']
         user = User.query.filter_by(username=username).first()
+        print(user)
         message = ''
         if user is None:
             message = 'Incorect Username'
             return jsonify(username=str(username), message=message)
         else:
             session['username'] = user.username
-            return jsonify(status='logined', id=user.id)
+            return jsonify(status='logined', session=session)
 
 @bp.before_app_request
 def load_logged_in_user():
