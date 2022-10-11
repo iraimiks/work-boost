@@ -15,10 +15,16 @@ def customer_reg():
         json_data = request.get_json()
         client_name = json_data['customername']
         phone = json_data['phone']
-        new_customer = Customer(client_name, phone, create_date=datetime.datetime.now())
-        db.session.add(new_customer)
-        db.session.commit()
-        return jsonify(status="register")
+        customer_phone = Customer.query.filter_by(phone=phone).first()
+        print(customer_phone)
+        if customer_phone is None:
+            new_customer = Customer(client_name, phone, create_date=datetime.datetime.now())
+            db.session.add(new_customer)
+            db.session.commit()
+            return jsonify(status="new_customer_register")
+        else:
+            return jsonify(status="exist_phone")
+
 
 @bp.route('/carreg/<id>', methods=('GET', 'POST'))
 def customer_car_reg(id):
