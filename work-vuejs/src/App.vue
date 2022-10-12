@@ -27,6 +27,9 @@ export default {
         });
     },
   },
+  beforeCreate() {
+    this.$store.commit('initializeStore')
+  },
 };
 </script>
 <style lang="scss">

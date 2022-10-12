@@ -59,6 +59,8 @@ export default {
           "Content-type": "application/json",
         },
       }).then((res) => {
+        console.log(res.data.session)
+        this.$store.commit('addToData', res.data.session)
         if (res.data.status === 'logined') {
           window.location.href = '/user/' + res.data.id
         } else {

@@ -3,24 +3,54 @@
     <div class="columns">
       <div class="column is-one-fifth">
         <aside class="menu">
-          <p class="menu-label">Options</p>
+          <p class="menu-label">Lietotāja darbs</p>
           <ul class="menu-list">
             <li><router-link to="/dashboard">Lietotājs</router-link></li>
+          </ul>
+        </aside>
+        <aside class="menu">
+          <p class="menu-label">Registrācija</p>
+          <ul class="menu-list">
             <li>
-              <router-link to="/dashboard/customerreg">Registrēt klientu</router-link>
+              <router-link to="/dashboard/customerreg"
+                >Registrēt klientu</router-link
+              >
             </li>
             <li>
-              <router-link to="/dashboard/workerreg">Registrēt darbinieku</router-link>
+              <router-link to="/dashboard/workerreg"
+                >Registrēt darbinieku</router-link
+              >
             </li>
+          </ul>
+        </aside>
+        <aside class="menu">
+          <p class="menu-label">Meklēt</p>
+          <ul class="menu-list">
             <li>
               <router-link to="/dashboard/customers">Klienti</router-link>
             </li>
             <li>
-              <router-link to="/dashboard/customerreg">Veicamie darbi</router-link>
+              <router-link to="/dashboard/customerreg">Darbinieki</router-link>
+            </li>
+            <li>
+              <router-link to="/dashboard/customerreg"
+                >Auto saraksts</router-link
+              >
+            </li>
+          </ul>
+        </aside>
+        <aside class="menu">
+          <p class="menu-label">Veicamie darbi</p>
+          <ul class="menu-list">
+            <li>
+              <router-link to="/dashboard/customerreg"
+                >Veicamie darbi ar auto</router-link
+              >
             </li>
           </ul>
         </aside>
       </div>
+
       <div class="column">
         <router-view />
       </div>

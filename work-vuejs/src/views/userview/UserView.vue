@@ -1,21 +1,25 @@
 <template>
-  <div>Tavs Profils: </div>
-  <div>Datums: </div>
-  <div>
-    <h2>Darba aktivitātes</h2>
-    <div class="columns">
-      <div class="column">
-        <h3>Klienti</h3>
-        <div>{{ customers.length }}</div>
-        <button @click="getItems(true)">Apskatīt</button>
-      </div>
-      <div class="column">
-        <h3>Darbinieki</h3>
-        <div>{{ workers.length }}</div>
-        <button @click="getItems(false)">Apskatīt</button>
-      </div>
+  <div class="card">
+    <div class="card-content">
+      <p class="title">Tavs Profils: {{ user }}</p>
+      <p class="subtitle">Datums: {{ today }}</p>
     </div>
+    <footer class="card-footer">
+      <p class="card-footer-item">
+        <span>
+          <h3>Klienti: {{ customers.length }}</h3>
+          <button @click="getItems(true)">Apskatīt</button>
+        </span>
+      </p>
+      <p class="card-footer-item">
+        <span>
+          <h3>Darbinieki: {{ workers.length }}</h3>
+          <button @click="getItems(false)">Apskatīt</button>
+        </span>
+      </p>
+    </footer>
   </div>
+  <hr />
   <div>
     <h2>Darbi</h2>
     <UserViewTable :items="items" />
@@ -35,10 +39,17 @@ export default {
       workers: [],
       items: [],
       what: true,
+      user: "",
+      today: "",
     };
   },
   mounted() {
-    this.getCustomers(), this.getWorkers(), this.getItems(this.what);
+    this.getCustomers(),
+    this.getWorkers(),
+    this.getItems(this.what),
+    this.user = this.$store.state.user.data[0].username,
+    this.date = new Date(),
+    this.today = this.date.toLocaleDateString('lv-LV') 
   },
   methods: {
     async getCustomers() {
@@ -46,7 +57,6 @@ export default {
         .get("/customer/list")
         .then((res) => {
           this.customers = res.data.customers;
-          console.log(this.customers)
         })
         .catch((error) => {
           console.log(error);
@@ -57,7 +67,6 @@ export default {
         .get("/customer/workers")
         .then((res) => {
           this.workers = res.data.workers;
-          console.log(this.workers)
         })
         .catch((error) => {
           console.log(error);

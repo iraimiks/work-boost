@@ -11,7 +11,9 @@
           v-model="customername"
         />
       </div>
-      <p class="help is-success">Registrēts klients</p>
+      <p class="help is-success" v-bind:class="{ 'block-show': showProblem }">
+        Klients registrēts
+      </p>
     </div>
     <div class="field">
       <label class="label">Telefons</label>
@@ -23,7 +25,9 @@
           v-model="phone"
         />
       </div>
-      <p class="help is-success">Registrēts talrunis</p>
+      <p class="help is-success" v-bind:class="{ 'block-show': showProblem }">
+        Registrēts talrunis
+      </p>
     </div>
     <div class="field">
       <button class="button">Registrēt</button>
@@ -37,7 +41,7 @@ export default {
   name: "CustomerRegView",
   data() {
     return {
-      show: false,
+      showProblem: true,
       phone: "",
       customername: "",
     };
@@ -52,7 +56,9 @@ export default {
           },
         })
         .then((res) => {
-          console.log(res);
+          if (res.data.status === "exist_phone") {
+            this.showProblem = false;
+          }
         })
         .catch((error) => {
           console.log(error);
