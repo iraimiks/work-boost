@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <h2 class="title">Registrētie klienti</h2>
+<div>
+    <h2 class="title">Darbinieki</h2>
     <table class="table is-fullwidth">
       <thead>
         <tr>
@@ -12,14 +12,14 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in customers" v-bind:key="item">
+        <tr v-for="item in workers" v-bind:key="item">
           <td>{{ item.id }}</td>
           <td>{{ item.name }}</td>
           <td>{{ item.phone }}</td>
           <td>{{ item.create_date }}</td>
           <td>
             <router-link :to="'/dashboard/customers/' + item.id "
-              >Klienta lapa</router-link
+              >Darbinieka lapa</router-link
             >
           </td>
         </tr>
@@ -28,24 +28,23 @@
   </div>
 </template>
 <script>
-import axios from "axios";
-
+import axios from 'axios'
 export default {
-  name: "CustomersView",
+  name: "WorkersView",
   data() {
     return {
-      customers: [],
+      workers: [],
     };
   },
   mounted() {
-    this.getCustomers();
+    this.getWorkers();
   },
   methods: {
-    async getCustomers() {
+    async getWorkers() {
       await axios
-        .get("/customer/list")
+        .get("/customer/workers")
         .then((res) => {
-          this.customers = res.data.customers;
+          this.workers = res.data.workers;
         })
         .catch((error) => {
           console.log(error);

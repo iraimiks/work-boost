@@ -5,7 +5,7 @@ from flask import (
 from flaskr import db
 from flaskr.customers.customer import Customer, Car, Order, ServiceCar
 from flaskr.users.user import User
-from sqlalchemy import desc
+from sqlalchemy import desc, or_
 
 bp = Blueprint('customer', __name__, url_prefix='/customer')
 
@@ -16,14 +16,13 @@ def customer_reg():
         client_name = json_data['customername']
         phone = json_data['phone']
         customer_phone = Customer.query.filter_by(phone=phone).first()
-        print(customer_phone)
         if customer_phone is None:
             new_customer = Customer(client_name, phone, create_date=datetime.datetime.now())
             db.session.add(new_customer)
             db.session.commit()
             return jsonify(status="new_customer_register")
         else:
-            return jsonify(status="exist_phone")
+            return jsonify(status="exist_phone", customer_id=customer_phone.id)
 
 
 @bp.route('/carreg/<id>', methods=('GET', 'POST'))
@@ -34,10 +33,14 @@ def customer_car_reg(id):
         number = json_data['carnumber']
         vinnumber = json_data['vinnumber']
         odometer = json_data['odometer']
-        new_cust_car = Car(brand, number, vinnumber, odometer, create_date=datetime.datetime.now(), customer_id=id)
-        db.session.add(new_cust_car)
-        db.session.commit()
-        return jsonify(status="carregister")
+        car_number = db.session.query(Car).filter(or_(Car.number == number, Car.vinnumber == vinnumber)).first()
+        if car_number is None:
+            new_cust_car = Car(brand, number, vinnumber, odometer, create_date=datetime.datetime.now(), customer_id=id)
+            db.session.add(new_cust_car)
+            db.session.commit()
+            return jsonify(status="carregister")
+        else:
+            return jsonify(status="exist_car", car_id=car_number.id)
 
 @bp.route('/list', methods=('GET', 'POST'))
 def all_customers():
@@ -50,6 +53,12 @@ def customers_cars(id):
     if request.method == 'GET':
         cars = Car.query.filter_by(customer_id=id).all()
         return jsonify({'customerscars': [car.serialized for car in cars]})
+
+@bp.route('/car/<id>', methods=('GET', 'POST'))
+def get_car(id):
+    if request.method == 'GET':
+        car = Car.query.filter_by(id=id).first()
+        return jsonify({'car':[car.serialized]})
 
 @bp.route('/car/<id>', methods=('GET', 'POST'))
 def customer_car(id):
@@ -68,6 +77,12 @@ def workers():
     if request.method == 'GET':
         workers = User.query.filter_by(user_role="worker").all()
         return jsonify({'workers': [worker.serialized for worker in workers]})
+
+@bp.route('/cars', methods=('GET','POST'))
+def cars():
+    if request.method == 'GET':
+        cars = Car.query.order_by(desc("id")).all()
+        return jsonify({'cars': [car.serialized for car in cars]})
 
 @bp.route('/order', methods=('GET', 'POST'))
 def order():

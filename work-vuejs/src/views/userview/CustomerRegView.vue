@@ -1,5 +1,5 @@
 <template>
-  <div>Registrēt klientu</div>
+  <h2 class="title">Registrēt klientu</h2>
   <form @submit.prevent="regcustomer" method="POST">
     <div class="field">
       <label class="label">Vārds Uzvārds</label>
@@ -32,6 +32,9 @@
     <div class="field">
       <button class="button">Registrēt</button>
     </div>
+    <div class="field" v-bind:class="{ 'block-show': showLinkToCustomer }">
+            <router-link class="button" :to="'/dashboard/customers/' + customerid">Klienta lapa</router-link>
+    </div>
   </form>
   <br />
 </template>
@@ -42,6 +45,8 @@ export default {
   data() {
     return {
       showProblem: true,
+      showLinkToCustomer: true,
+      customerid: "",
       phone: "",
       customername: "",
     };
@@ -58,6 +63,8 @@ export default {
         .then((res) => {
           if (res.data.status === "exist_phone") {
             this.showProblem = false;
+            this.showLinkToCustomer = false;
+            this.customerid = res.data.customer_id;
           }
         })
         .catch((error) => {

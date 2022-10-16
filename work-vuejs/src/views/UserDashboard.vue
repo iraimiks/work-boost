@@ -30,10 +30,10 @@
               <router-link to="/dashboard/customers">Klienti</router-link>
             </li>
             <li>
-              <router-link to="/dashboard/customerreg">Darbinieki</router-link>
+              <router-link to="/dashboard/workers">Darbinieki</router-link>
             </li>
             <li>
-              <router-link to="/dashboard/customerreg"
+              <router-link to="/dashboard/cars"
                 >Auto saraksts</router-link
               >
             </li>

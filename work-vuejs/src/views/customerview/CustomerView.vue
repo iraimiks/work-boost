@@ -1,15 +1,22 @@
 <template>
-  <div>Klients:</div>
-  <div>{{ customer.id }}</div>
-  <div>{{ customer.customer_name }}</div>
-  <div>{{ customer.create_date }}</div>
-
+  <div class="card">
+    <div class="card-content">
+      <p class="subtitle">
+        Klienta vārds: <strong>{{ customer.name }}</strong>
+      </p>
+      <p class="subtitle">
+        Izveides datums: {{ convertDate(customer.create_date) }}
+      </p>
+      <p class="subtitle">Telefons: {{ customer.phone }}</p>
+    </div>
+  </div>
   <br />
   <div class="field">
     <button class="button" @click="showBlock(show)">
       Auto registrācijas forma
     </button>
   </div>
+  <br />
   <form @submit.prevent="regcustcar" method="POST">
     <div class="block" v-bind:class="{ 'block-show': !show }">
       <div class="field">
@@ -63,38 +70,42 @@
       </div>
     </div>
   </form>
-  <div>
-    <h2>Klienta auto</h2>
-    <button @click="reloadpage">R</button>
-    <table class="table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Modelis</th>
-          <th>Auto Nr.</th>
-          <th>VIN numurs</th>
-          <th>Odometra rādītājs</th>
-          <th>Izveides datums</th>
-          <th>Darbības</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="item in cars" v-bind:key="item">
-          <td>{{ item.id }}</td>
-          <td>{{ item.brand }}</td>
-          <td>{{ item.number }}</td>
-          <td>{{ item.vinnumber }}</td>
-          <td>{{ item.odometer }}</td>
-          <td>{{ item.create_date }}</td>
-          <td>
-            <router-link :to="'/'+ item.customer_id + '/car/' + item.id"
-              >Auto</router-link
-            >
-          </td>
-        </tr>
-      </tbody>
-    </table>
+  <div class="columns is-justify-content-space-between is-flex">
+    <div class="column">
+      <h2 class="title">Klienta auto</h2>
+    </div>
+    <div class="column  is-one-quarter">
+      <button @click="reloadpage" class="button">Pārlādēt</button>
+    </div>
   </div>
+  <table class="table is-fullwidth">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Modelis</th>
+        <th>Auto Nr.</th>
+        <th>VIN numurs</th>
+        <th>Odometra rādītājs</th>
+        <th>Izveides datums</th>
+        <th>Darbības</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="item in cars" v-bind:key="item">
+        <td>{{ item.id }}</td>
+        <td>{{ item.brand }}</td>
+        <td>{{ item.number }}</td>
+        <td>{{ item.vinnumber }}</td>
+        <td>{{ item.odometer }}</td>
+        <td>{{ item.create_date }}</td>
+        <td>
+          <router-link :to="'/' + item.customer_id + '/car/' + item.id"
+            >Auto</router-link
+          >
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </template>
 <script>
 import axios from "axios";
@@ -132,7 +143,6 @@ export default {
         .get(`/customer/cars/${this.$route.params.id}`)
         .then((res) => {
           this.cars = res.data.customerscars;
-          console.log(this.cars)
         })
         .catch((error) => {
           console.log(error);
@@ -162,8 +172,12 @@ export default {
       this.show = !check;
     },
     reloadpage() {
-        window.location.reload();
-    }
+      window.location.reload();
+    },
+    convertDate(date) {
+      this.date = new Date(date);
+      return this.date.toLocaleDateString("lv-LV");
+    },
   },
 };
 </script>

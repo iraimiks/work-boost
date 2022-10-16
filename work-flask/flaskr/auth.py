@@ -7,7 +7,7 @@ from flask import (
 from flaskr import db
 
 from flaskr.users.user import User
-
+from sqlalchemy import or_
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -59,7 +59,11 @@ def worker_reg():
         password  = json_data['password']
         phone = json_data['phone']
         role = 'worker'
-        new_worker = User(role, name, username, password, phone, create_date=datetime.datetime.now())
-        db.session.add(new_worker)
-        db.session.commit()
-        return jsonify(status="register")
+        worker = db.session.query(User).filter(or_(User.name == name, User.phone == phone, User.username == username)).first()
+        if worker is None:
+            new_worker = User(role, name, username, password, phone, create_date=datetime.datetime.now())
+            db.session.add(new_worker)
+            db.session.commit()
+            return jsonify(status="register")
+        else:
+            return jsonify(status="exist_worker", worker=worker.id)

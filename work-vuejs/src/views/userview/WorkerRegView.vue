@@ -1,6 +1,6 @@
 <template>
-  <div>Registrēt darbinieku</div>
-  <form @submit.prevent="regworker" method="POST">
+  <h2 class="title">Registrēt darbinieku</h2>
+  <form @submit.prevent="regWorker" method="POST">
     <div class="field">
       <label class="label">Vārds</label>
       <div class="control">
@@ -11,7 +11,7 @@
           v-model="name"
         />
       </div>
-      <p class="help is-success">Registrēts darbinieks</p>
+      <p class="help is-success" v-bind:class="{ 'block-show': workerProblem }">Registrēts darbinieks</p>
     </div>
     <div class="field">
       <label class="label">Telefons</label>
@@ -23,7 +23,7 @@
           v-model="phone"
         />
       </div>
-      <p class="help is-success">Registrēts talrunis</p>
+      <p class="help is-success" v-bind:class="{ 'block-show': phoneProblem }">Registrēts talrunis</p>
     </div>
     <div class="field">
       <label class="label">Lietotāj vārds</label>
@@ -35,17 +35,19 @@
           v-model="username"
         />
       </div>
-      <p class="help is-success">Lietotāja vārds</p>
+      <p class="help is-success" v-bind:class="{ 'block-show': usernameProblem }">Lietotāja vārds</p>
     </div>
     <div class="field">
       <label class="label">Parole</label>
       <div class="control">
         <input class="input" type="password" v-model="password" />
       </div>
-      <p class="help is-success">Parole</p>
     </div>
     <div class="field">
       <button class="button">Registrēt</button>
+    </div>
+    <div class="field" v-bind:class="{ 'block-show': showLinkToWorker }">
+            <router-link class="button" :to="'/dashboard/customers/' + customerid">Klienta lapa</router-link>
     </div>
   </form>
   <br />
@@ -60,10 +62,16 @@ export default {
       phone: "",
       username: "",
       password: "",
+      workerid: "",
+      workerProblem: true,
+      phoneProblem: true,
+      usernameProblem: true,
+      showLinkToWorker: true,
+      worker: true,
     };
   },
   methods: {
-    async regworker() {
+    async regWorker() {
       let payload = {
         name: this.name,
         phone: this.phone,
@@ -78,6 +86,13 @@ export default {
         })
         .then((res) => {
           console.log(res);
+          if(res.data.status === "exist_worker") {
+              this.workerProblem = false;
+              this.phoneProblem = false;
+              this.usernameProblem = false;
+              this.showLinkToWorker = false;
+              this.workerid = res.data.worker;
+          }
         })
         .catch((error) => {
           console.log(error);

@@ -38,18 +38,17 @@ export default {
       customers: [],
       workers: [],
       items: [],
-      what: true,
       user: "",
       today: "",
     };
   },
   mounted() {
     this.getCustomers(),
-    this.getWorkers(),
-    this.getItems(this.what),
-    this.user = this.$store.state.user.data[0].username,
-    this.date = new Date(),
-    this.today = this.date.toLocaleDateString('lv-LV') 
+      this.getWorkers(),
+      this.getItems(this.what),
+      (this.user = this.$store.state.user.data[0].username),
+      (this.date = new Date()),
+      (this.today = this.date.toLocaleDateString("lv-LV"));
   },
   methods: {
     async getCustomers() {
@@ -57,6 +56,7 @@ export default {
         .get("/customer/list")
         .then((res) => {
           this.customers = res.data.customers;
+          this.items = this.customers;
         })
         .catch((error) => {
           console.log(error);

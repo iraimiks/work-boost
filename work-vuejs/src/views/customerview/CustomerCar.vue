@@ -6,7 +6,7 @@
   <div>{{ car.vinnumber }}</div>
   <div>{{ car.odometer }}</div>
   <div>{{ car.create_date }}</div>
-  <h3>Izveidot pasūtījumu un pievienot darbinieku</h3>
+  <h3 class="title">Izveidot pasūtījumu un pievienot darbinieku</h3>
   <br />
   <div class="field">
     <button class="button" @click="showBlock(show)">Pasūtījuma forma</button>
@@ -31,7 +31,7 @@
     </div>
   </form>
 
-  <h2>Darbs auto</h2>
+  <h2 class="title">Darbs auto</h2>
   <table class="table">
     <thead>
       <tr>
@@ -75,8 +75,21 @@ export default {
   mounted() {
     this.getWorkers();
     this.getCarOrders();
+    this.getCar();
   },
   methods: {
+    async getCar() {
+      await axios
+        .get(`/customer/car/${this.$route.params.id}`)
+        .then((res) => {
+          console.log(this.$route.params.id)
+          this.car = res.data.car;
+          console.log(this.car)
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
     async getWorkers() {
       await axios
         .get(`/customer/workers`)

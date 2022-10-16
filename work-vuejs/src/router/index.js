@@ -8,7 +8,8 @@ import CustomerView from '../views/customerview/CustomerView.vue'
 import CarView from '../views/customerview/CustomerCar.vue'
 import OrderView from '../views/customerview/OrderView.vue'
 import WorkerRegView from '../views/userview/WorkerRegView.vue'
-
+import WorkersView from '../views/userview/WorkersView.vue'
+import AllCarsView from '../views/userview/AllCarsView.vue'
 const routes = [
   {
     path: '/',
@@ -41,6 +42,14 @@ const routes = [
       {
         path: 'customers',
         component: CustomersView,
+      },
+      {
+        path: 'workers',
+        component: WorkersView,
+      },
+      {
+        path: 'cars',
+        component: AllCarsView,
       },
       {
         path: 'customers/:id',
