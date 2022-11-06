@@ -62,7 +62,7 @@ export default {
         console.log(res.data.session)
         this.$store.commit('addToData', res.data.session)
         if (res.data.status === 'logined') {
-          window.location.href = '/user/' + res.data.id
+          window.location.href = '/user/' + res.data.session.id
         } else {
           console.log('problems');
         }

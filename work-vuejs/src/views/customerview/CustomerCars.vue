@@ -1,7 +1,7 @@
 <template>
   <div>
     <h2>Klienta auto</h2>
-    <table class="table">
+    <table class="table is-fullwidth">
       <thead>
         <tr>
           <th>ID</th>

@@ -1,8 +1,26 @@
 <template>
-  <div>Order View</div>
-  <div>{{ order.work_name }}</div>
-  <div>{{ order.status }}</div>
-  <div>{{ order.name }}</div>
+  <div class="card">
+    <div class="card-content">
+      <p class="subtitle">
+        Darbu veic: <strong>{{ order.work_name }}</strong>
+      </p>
+      <p class="subtitle">
+        Darba status:
+        <span v-if="order.status === 'Darbs Sākts'" style="color: green">{{
+          order.status
+        }}</span>
+        <span v-else="order.status === 'Darbs Beigts'" style="color: red">{{
+          order.status
+        }}</span>
+      </p>
+      <p class="subtitle">
+        Pasūtījuma registrācijas kods: <strong>{{ order.name }}</strong>
+      </p>
+      <p class="subtitle">
+        Darba uzsākšana: <strong>{{ convertDate(order.create_date) }}</strong>
+      </p>
+    </div>
+  </div>
   <br />
   <div class="field">
     <button class="button" @click="showBlock(show)">
@@ -62,9 +80,16 @@
     </div>
   </form>
   <div>
-    <h2>Klienta auto</h2>
-    <button @click="reloadpage">R</button>
-    <table class="table">
+    <div class="columns is-justify-content-space-between is-flex">
+      <div class="column">
+        <h2 class="title">Darbs ar auto</h2>
+      </div>
+      <div class="column is-one-quarter">
+        <button @click="reloadpage" class="button">Pārlādēt</button>
+      </div>
+    </div>
+
+    <table class="table is-fullwidth">
       <thead>
         <tr>
           <th>ID</th>
@@ -86,12 +111,20 @@
           <td>{{ item.create_date }}</td>
           <td>
             <router-link :to="'/' + item.customer_id + '/car/' + item.id"
-              >Auto</router-link
+              >Labot</router-link
             >
           </td>
         </tr>
       </tbody>
     </table>
+    <div class="field">
+      <h2 class="title">Izviedot pavadzīmi</h2>
+      <form @submit.prevent="createOrder" method="POST">
+        <div class="field">
+          <button class="button">Veidot</button>
+        </div>
+      </form>
+    </div>
   </div>
 </template>
 <script>
@@ -103,6 +136,10 @@ export default {
       order: {},
       show: false,
       servicecar: [],
+      worktype: "",
+      spendtime: "",
+      partname: "",
+      partcount: "",
     };
   },
   mounted() {
@@ -110,6 +147,24 @@ export default {
     this.getServices();
   },
   methods: {
+    async createOrder() {
+      let payload = {
+        cust_id: this.order.cust_id,
+        order_id: this.$route.params.id,
+      };
+      await axios
+        .post(`/customer/orderdata`, payload, {
+          headers: {
+            "Content-type": "application/json",
+          },
+        })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
     async getOrder() {
       await axios
         .get(`/customer/order/${this.$route.params.id}`)
@@ -125,6 +180,7 @@ export default {
         .get(`/customer/services/${this.$route.params.id}`)
         .then((res) => {
           this.servicecar = res.data.servicecar;
+          console.log(this.servicecar);
         })
         .catch((error) => {
           console.log(error);
@@ -132,10 +188,11 @@ export default {
     },
     async createService() {
       let payload = {
-        worktype: this.worktype,
-        spendtime: this.spendtime,
-        partname: this.partname,
-        partcount: this.partcount,
+        work_type: this.worktype,
+        spend_time: this.spendtime,
+        part_name: this.partname,
+        part_count: this.partcount,
+        order_id: this.orderid,
       };
       await axios
         .post(`/customer/service/${this.$route.params.id}`, payload, {
@@ -152,6 +209,13 @@ export default {
     },
     showBlock(check) {
       this.show = !check;
+    },
+    reloadpage() {
+      window.location.reload();
+    },
+    convertDate(date) {
+      this.date = new Date(date);
+      return this.date.toLocaleDateString("lv-LV");
     },
   },
 };

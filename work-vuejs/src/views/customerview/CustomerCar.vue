@@ -1,12 +1,24 @@
 <template>
-  <div>Klienta Auto:</div>
-  <div>{{ car.id }}</div>
-  <div>{{ car.brand }}</div>
-  <div>{{ car.number }}</div>
-  <div>{{ car.vinnumber }}</div>
-  <div>{{ car.odometer }}</div>
-  <div>{{ car.create_date }}</div>
-  <h3 class="title">Izveidot pasūtījumu un pievienot darbinieku</h3>
+  <div class="card">
+    <div class="card-content">
+      <h2 class="title">Izveidot pasūtījumu un pievienot darbinieku</h2>
+      <p class="subtitle">
+        Auto: <strong>{{ car.brand }}</strong>
+      </p>
+      <p class="subtitle">
+        Auto numurs: <strong>{{ car.number }}</strong>
+      </p>
+      <p class="subtitle">
+        VIN: <strong>{{ car.vinnumber }}</strong>
+      </p>
+      <p class="subtitle">
+        Odometrs: <strong>{{ car.odometer }}</strong>
+      </p>
+      <p class="subtitle">
+        Izveides datums: <strong>{{ convertDate(car.create_date) }}</strong>
+      </p>
+    </div>
+  </div>
   <br />
   <div class="field">
     <button class="button" @click="showBlock(show)">Pasūtījuma forma</button>
@@ -26,13 +38,20 @@
         </div>
       </div>
       <div class="field">
-        <button class="button">Darbs auto</button>
+        <button class="button">Iveidot pasūtījumu</button>
       </div>
     </div>
   </form>
+  <div class="columns is-justify-content-space-between is-flex">
+    <div class="column">
+      <h2 class="title">Auto pasūtījumi</h2>
+    </div>
+    <div class="column is-one-quarter">
+      <button @click="reloadpage" class="button">Pārlādēt</button>
+    </div>
+  </div>
 
-  <h2 class="title">Darbs auto</h2>
-  <table class="table">
+  <table class="table is-fullwidth">
     <thead>
       <tr>
         <th>ID</th>
@@ -51,9 +70,7 @@
         <td>{{ item.work_name }}</td>
         <td>{{ item.create_date }}</td>
         <td>
-          <router-link :to="'/order/' + item.id"
-            >Darbs ar auto</router-link
-          >
+          <router-link :to="'/order/' + item.id">Darbs ar auto</router-link>
         </td>
       </tr>
     </tbody>
@@ -82,9 +99,7 @@ export default {
       await axios
         .get(`/customer/car/${this.$route.params.id}`)
         .then((res) => {
-          console.log(this.$route.params.id)
-          this.car = res.data.car;
-          console.log(this.car)
+          this.car = res.data.car[0];
         })
         .catch((error) => {
           console.log(error);
@@ -127,8 +142,15 @@ export default {
           console.log(error);
         });
     },
+    reloadpage() {
+      window.location.reload();
+    },
     showBlock(check) {
       this.show = !check;
+    },
+    convertDate(date) {
+      this.date = new Date(date);
+      return this.date.toLocaleDateString("lv-LV");
     },
   },
 };

@@ -10,6 +10,7 @@ import OrderView from '../views/customerview/OrderView.vue'
 import WorkerRegView from '../views/userview/WorkerRegView.vue'
 import WorkersView from '../views/userview/WorkersView.vue'
 import AllCarsView from '../views/userview/AllCarsView.vue'
+import OrderCreateView from '../views/userview/OrderCreatView.vue'
 const routes = [
   {
     path: '/',
@@ -62,6 +63,10 @@ const routes = [
       {
         path: '/order/:id',
         component: OrderView,
+      },
+      {
+        path: '/creadorder/:id',
+        component: OrderCreateView,
       }
     ]
   },

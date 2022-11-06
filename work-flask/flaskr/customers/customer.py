@@ -100,3 +100,39 @@ class ServiceCar(db.Model):
             'create_date': self.create_date,
             'order_id': self.order_id
         }
+
+class OrderData(db.Model):
+    id = db.Column(db.Integer(), primary_key=True, autoincrement=True)
+    customer_name = db.Column(db.String(length=50))
+    phone = db.Column(db.String(length=50))
+    brand = db.Column(db.String(length=50))
+    number = db.Column(db.String(length=50))
+    vinumber = db.Column(db.String(length=50))
+    odometer = db.Column(db.String(length=50))
+    create_in = db.Column(db.String(length=50))
+    order_id = db.Column(db.Integer())
+    create_out = db.Column(db.DateTime)
+    def __init__(self, customer_name, phone, brand, number, vinumber, odometer, create_in, order_id, create_out):
+        self.customer_name = customer_name
+        self.phone = phone
+        self.brand = brand
+        self.number = number
+        self.vinumber = vinumber
+        self.odometer = odometer
+        self.create_in = create_in
+        self.create_out = create_out
+        self.order_id = order_id
+    @property
+    def serialized(self):
+        return {
+            'id': self.id,
+            'customer_name': self.customer_name,
+            'phone': self.phone,
+            'brand': self.brand,
+            'number': self.number,
+            'vinumber': self.vinumber,
+            'odometer': self.odometer,
+            'create_in': self.create_in,
+            'create_out': self.create_out,
+            'order_id': self.order_id
+        }

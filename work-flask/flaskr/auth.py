@@ -34,6 +34,7 @@ def login():
             return jsonify(username=str(username), message=message)
         else:
             session['username'] = user.username
+            session['id'] = user.id
             return jsonify(status='logined', session=session)
 
 @bp.before_app_request
