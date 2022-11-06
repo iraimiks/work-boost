@@ -152,6 +152,16 @@ export default {
         .catch((error) => {
           console.log(error);
         });
+    },
+    async getPdfTest() {
+      await axios
+        .get(`/customer/hello_raims.pdf`)
+        .then((res) => {
+          console.log(res)
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
   },
 };

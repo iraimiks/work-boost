@@ -160,6 +160,7 @@ export default {
         })
         .then((res) => {
           console.log(res);
+          window.location.href = '/creadorder/' + this.$route.params.id
         })
         .catch((error) => {
           console.log(error);
