@@ -40,7 +40,9 @@
             v-model="carnumber"
           />
         </div>
-        <p class="help is-success">Registrēts auto numurs</p>
+        <p class="help is-success" v-bind:class="{ 'block-show': numberexist }">
+          Registrēts auto numurs
+        </p>
       </div>
       <div class="field">
         <label class="label">VIN numurs</label>
@@ -52,7 +54,6 @@
             v-model="vinnumber"
           />
         </div>
-        <p class="help is-success">Registrēts auto vin</p>
       </div>
       <div class="field">
         <label class="label">Odometra rādītājs</label>
@@ -73,9 +74,6 @@
   <div class="columns is-justify-content-space-between is-flex">
     <div class="column">
       <h2 class="title">Klienta auto</h2>
-    </div>
-    <div class="column  is-one-quarter">
-      <button @click="reloadpage" class="button">Pārlādēt</button>
     </div>
   </div>
   <table class="table is-fullwidth">
@@ -116,6 +114,7 @@ export default {
     return {
       cars: [],
       show: false,
+      numberexist: true,
       customer: {},
       carbrand: "",
       carnumber: "",
@@ -162,6 +161,11 @@ export default {
           },
         })
         .then((res) => {
+          if (res.data.status === "exist_car") {
+            this.numberexist = false;
+          } else {
+            this.reloadpage();
+          }
           console.log(res);
         })
         .catch((error) => {

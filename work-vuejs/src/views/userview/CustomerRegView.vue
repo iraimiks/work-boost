@@ -65,6 +65,8 @@ export default {
             this.showProblem = false;
             this.showLinkToCustomer = false;
             this.customerid = res.data.customer_id;
+          } else {
+            window.location.href = '/dashboard/customers/' + res.data.redid;
           }
         })
         .catch((error) => {

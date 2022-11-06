@@ -84,11 +84,7 @@
       <div class="column">
         <h2 class="title">Darbs ar auto</h2>
       </div>
-      <div class="column is-one-quarter">
-        <button @click="reloadpage" class="button">Pārlādēt</button>
-      </div>
     </div>
-
     <table class="table is-fullwidth">
       <thead>
         <tr>
@@ -160,7 +156,7 @@ export default {
         })
         .then((res) => {
           console.log(res);
-          window.location.href = '/creadorder/' + this.$route.params.id
+          window.location.href = "/creadorder/" + this.$route.params.id;
         })
         .catch((error) => {
           console.log(error);
@@ -203,6 +199,7 @@ export default {
         })
         .then((res) => {
           console.log(res);
+          this.reloadpage();
         })
         .catch((error) => {
           console.log(error);

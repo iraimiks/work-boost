@@ -46,9 +46,6 @@
     <div class="column">
       <h2 class="title">Auto pasūtījumi</h2>
     </div>
-    <div class="column is-one-quarter">
-      <button @click="reloadpage" class="button">Pārlādēt</button>
-    </div>
   </div>
 
   <table class="table is-fullwidth">
@@ -129,6 +126,7 @@ export default {
         })
         .then((res) => {
           console.log(res);
+          this.reloadpage();
         })
         .catch((error) => console.log(error));
     },
