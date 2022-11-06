@@ -29,7 +29,8 @@ def customer_reg():
             new_customer = Customer(client_name, phone, create_date=datetime.datetime.now())
             db.session.add(new_customer)
             db.session.commit()
-            return jsonify(status="new_customer_register")
+            customer = Customer.query.order_by(desc("id")).first()
+            return jsonify(status="new_customer_register", redid=customer.id)
         else:
             return jsonify(status="exist_phone", customer_id=customer_phone.id)
 
@@ -42,14 +43,14 @@ def customer_car_reg(id):
         number = json_data['carnumber']
         vinnumber = json_data['vinnumber']
         odometer = json_data['odometer']
-        car_number = db.session.query(Car).filter(or_(Car.number == number, Car.vinnumber == vinnumber)).first()
+        car_number = Car.query.filter_by(number=number).first()
         if car_number is None:
             new_cust_car = Car(brand, number, vinnumber, odometer, create_date=datetime.datetime.now(), customer_id=id)
             db.session.add(new_cust_car)
             db.session.commit()
             return jsonify(status="carregister")
         else:
-            return jsonify(status="exist_car", car_id=car_number.id)
+            return jsonify(status="exist_car", car=car_number.number)
 
 @bp.route('/list', methods=('GET', 'POST'))
 def all_customers():
