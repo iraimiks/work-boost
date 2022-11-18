@@ -8,22 +8,18 @@
       <p class="card-footer-item">
         <span>
           <h3>Klienti: {{ customers.length }}</h3>
-          <button @click="getItems(true)">Apskatīt</button>
+          <button @click="getItems(true, 1)">Apskatīt</button>
         </span>
       </p>
       <p class="card-footer-item">
         <span>
           <h3>Darbinieki: {{ workers.length }}</h3>
-          <button @click="getItems(false)">Apskatīt</button>
+          <button @click="getItems(false, 1)">Apskatīt</button>
         </span>
       </p>
     </footer>
   </div>
   <hr />
-  <div>
-    <h2>Darbi</h2>
-    <UserViewTable :items="items" />
-  </div>
 </template>
 <script>
 import UserViewTable from "../../components/UserViewTable.vue";
@@ -38,14 +34,15 @@ export default {
       customers: [],
       workers: [],
       items: [],
+
       user: "",
       today: "",
+
     };
   },
   mounted() {
-    this.getCustomers(),
+      this.getCustomers(),
       this.getWorkers(),
-      this.getItems(this.what),
       (this.user = this.$store.state.user.data[0].username),
       (this.date = new Date()),
       (this.today = this.date.toLocaleDateString("lv-LV"));
@@ -56,7 +53,6 @@ export default {
         .get("/customer/list")
         .then((res) => {
           this.customers = res.data.customers;
-          this.items = this.customers;
         })
         .catch((error) => {
           console.log(error);
@@ -72,13 +68,6 @@ export default {
           console.log(error);
         });
     },
-    getItems(what) {
-      if (what) {
-        this.items = this.customers;
-      } else {
-        this.items = this.workers;
-      }
-    },
-  },
+  }
 };
 </script>

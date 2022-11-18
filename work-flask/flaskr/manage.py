@@ -3,7 +3,7 @@ from flask import (
     Blueprint, request, jsonify, render_template
 )
 from flaskr import db
-from flaskr.customers.customer import Customer, Car, Order, ServiceCar, OrderData
+from flaskr.customers.customer import Customer, Car, Order, ServiceCar, OrderData, PartCar
 from flaskr.users.user import User
 from sqlalchemy import desc, or_
 from flask_weasyprint import HTML, render_pdf
@@ -110,12 +110,7 @@ def order():
         db.session.commit()
         return jsonify(status="orderregister")
 
-@bp.route('/orderdata/<id>', methods=('GET', 'POST'))
-def get_order_data(id):
-    if request.method == 'GET':
-        order = OrderData.query.filter_by(order_id=id).first()
-        services = ServiceCar.query.filter_by(order_id=id).all()
-        return jsonify({'info': [order.serialized], 'service_car': [service.serialized for service in services]})
+
 
 @bp.route('/orderdata', methods=('GET', 'POST'))
 def order_data():
@@ -153,22 +148,49 @@ def car_order(id):
         order = Order.query.filter_by(id=id).first()
         return jsonify({'order': [order.serialized]})
 
+
+# service api
 @bp.route('/service/<id>', methods=('GET', 'POST'))
 def car_service(id):
     if request.method == 'POST':
         json_data = request.get_json()
-        print(json_data)
         work_type = json_data['work_type']
+        description = json_data['description']
         spend_time = json_data['spend_time']
-        part_name = json_data['part_name']
-        part_count = json_data['part_count']
-        new_service = ServiceCar(work_type, spend_time, part_name, part_count, create_date=datetime.datetime.now(), order_id=id)
+        work_price = json_data['work_price']
+        new_service = ServiceCar(work_type, spend_time, work_price, description, create_date=datetime.datetime.now(), order_id=id)
         db.session.add(new_service)
         db.session.commit()
-        return jsonify(status="carregister")
+        return jsonify(status="car_service_reg")
+
+@bp.route('/part/<id>', methods=('GET', 'POST'))
+def car_part(id):
+    if request.method == 'POST':
+        json_data = request.get_json()
+        part_name = json_data['part_name']
+        part_count = json_data['part_count']
+        part_price = json_data['part_price']
+        full_price = json_data['full_price']
+        new_part = PartCar(part_name, part_count, part_price, full_price, create_date=datetime.datetime.now(), order_id=id)
+        db.session.add(new_part)
+        db.session.commit()
+        return jsonify(status="part_car_reg")
 
 @bp.route('/services/<id>', methods=('GET', 'POST'))
 def car_services(id):
     if request.method == 'GET':
         services = ServiceCar.query.filter_by(order_id=id).all()
         return jsonify({'servicecar': [service.serialized for service in services]})
+
+@bp.route('/parts/<id>', methods=('GET', 'POST'))
+def car_parts(id):
+    if request.method == 'GET':
+        parts = PartCar.query.filter_by(order_id=id).all()
+        return jsonify({'partscar': [part.serialized for part in parts]})
+
+@bp.route('/orderdata/<id>', methods=('GET', 'POST'))
+def get_order_data(id):
+    if request.method == 'GET':
+        order = OrderData.query.filter_by(order_id=id).first()
+        services = ServiceCar.query.filter_by(order_id=id).all()
+        return jsonify({'info': [order.serialized], 'service_car': [service.serialized for service in services]})

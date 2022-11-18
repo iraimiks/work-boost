@@ -30,7 +30,7 @@
 export default {
   name: "UserViewTable",
   props: {
-    items: Array,
+    items: Array
   },
 };
 </script>

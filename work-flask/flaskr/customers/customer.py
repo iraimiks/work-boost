@@ -77,15 +77,15 @@ class ServiceCar(db.Model):
     id = db.Column(db.Integer(), primary_key=True, autoincrement=True)
     work_type = db.Column(db.String(length=50))
     spend_time = db.Column(db.String(length=50))
-    part_name = db.Column(db.String(length=50))
-    part_count = db.Column(db.String(length=50))
+    description = db.Column(db.String(length=50))
+    work_price = db.Column(db.Float())
     create_date = db.Column(db.DateTime)
     order_id = db.Column(db.Integer(), db.ForeignKey('order.id'), nullable=False)
-    def __init__(self, work_type, spend_time, part_name, part_count, create_date, order_id):
+    def __init__(self, work_type, spend_time, work_price, description, create_date, order_id):
         self.work_type = work_type
         self.spend_time = spend_time
-        self.part_name = part_name
-        self.part_count = part_count
+        self.work_price = work_price
+        self.description = description
         self.create_date = create_date
         self.order_id = order_id
 
@@ -95,8 +95,36 @@ class ServiceCar(db.Model):
             'id': self.id,
             'work_type': self.work_type,
             'spend_time': self.spend_time,
+            'description': self.description,
+            'work_price': self.work_price,
+            'create_date': self.create_date,
+            'order_id': self.order_id
+        }
+
+class PartCar(db.Model):
+    id = db.Column(db.Integer(), primary_key=True, autoincrement=True)
+    part_name = db.Column(db.String(length=50))
+    part_count = db.Column(db.Integer())
+    part_price = db.Column(db.Float())
+    full_price = db.Column(db.Float())
+    create_date = db.Column(db.DateTime)
+    order_id = db.Column(db.Integer(), db.ForeignKey('order.id'), nullable=False)
+    def __init__(self, part_name, part_count, part_price, full_price, create_date, order_id):
+            self.part_name = part_name
+            self.part_count = part_count
+            self.part_price = part_price
+            self.full_price = full_price
+            self.create_date = create_date
+            self.order_id = order_id
+
+    @property
+    def serialized(self):
+        return {
+            'id': self.id,
             'part_name': self.part_name,
             'part_count': self.part_count,
+            'part_price': self.part_price,
+            'full_price': self.full_price,
             'create_date': self.create_date,
             'order_id': self.order_id
         }

@@ -22,10 +22,66 @@
     </div>
   </div>
   <br />
-  <div class="field">
-    <button class="button" @click="showBlock(show)">
-      Darba registrācija un detaļu registrācija
-    </button>
+  <div class="columns">
+    <div class="column">
+      <div class="field">
+        <button class="button" @click="showBlock(show)">
+          Darba registrācija
+        </button>
+      </div>
+    </div>
+    <div class="column">
+      <form>
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">Stundas likme</label>
+          </div>
+          <div class="field-body">
+            <div class="field has-addons">
+              <p class="control">
+                <span class="select">
+                  <select>
+                    <option>10</option>
+                    <option>15</option>
+                    <option>20</option>
+                  </select>
+                </span>
+              </p>
+              <p class="control">
+                <input class="input" type="text" placeholder="0.00" />
+              </p>
+              <p class="control">
+                <a class="button"> Noteikt </a>
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">Grūtības pakāpe</label>
+          </div>
+          <div class="field-body">
+            <div class="field has-addons">
+              <p class="control">
+                <span class="select">
+                  <select>
+                    <option>1 %</option>
+                    <option>2 %</option>
+                    <option>3 %</option>
+                  </select>
+                </span>
+              </p>
+              <p class="control">
+                <input class="input" type="text" placeholder="0" />
+              </p>
+              <p class="control">
+                <a class="button"> Noteikt </a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
   </div>
   <form @submit.prevent="createService" method="POST">
     <div class="block" v-bind:class="{ 'block-show': !show }">
@@ -42,6 +98,12 @@
         </div>
       </div>
       <div class="field">
+        <label class="label">Apraksts</label>
+        <div class="control">
+          <input class="input is-success" type="text" v-model="description" />
+        </div>
+      </div>
+      <div class="field">
         <label class="label">Iztērētais laiks</label>
         <div class="control">
           <input
@@ -53,24 +115,13 @@
         </div>
       </div>
       <div class="field">
-        <label class="label">Detaļas nosaukums</label>
+        <label class="label">Darba cena</label>
         <div class="control">
           <input
             class="input is-success"
             type="text"
-            placeholder="Riepas"
-            v-model="partname"
-          />
-        </div>
-      </div>
-      <div class="field">
-        <label class="label">Detaļu skaits</label>
-        <div class="control">
-          <input
-            class="input is-success"
-            type="number"
-            placeholder="Cipars"
-            v-model="partcount"
+            placeholder="0.00"
+            v-model="workprice"
           />
         </div>
       </div>
@@ -91,8 +142,8 @@
           <th>ID</th>
           <th>Darba veids</th>
           <th>Iztērētais laiks</th>
-          <th>Detaļas nosaukums</th>
-          <th>Detaļu skaits</th>
+          <th>Darba laiks</th>
+          <th>Darba samaksa</th>
           <th>Izveides datums</th>
           <th>Darbības</th>
         </tr>
@@ -101,14 +152,96 @@
         <tr v-for="item in servicecar" v-bind:key="item">
           <td>{{ item.id }}</td>
           <td>{{ item.work_type }}</td>
+          <td>{{ item.description }}</td>
           <td>{{ item.spend_time }}</td>
-          <td>{{ item.part_name }}</td>
-          <td>{{ item.part_count }}</td>
+          <td>{{ item.work_price }}</td>
           <td>{{ item.create_date }}</td>
           <td>
             <router-link :to="'/' + item.customer_id + '/car/' + item.id"
               >Labot</router-link
             >
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="field">
+      <button class="button" @click="showPartBlock(partForm)">
+        Detaļu registrācija
+      </button>
+    </div>
+    <form @submit.prevent="creatPart" method="POST">
+      <div class="block" v-bind:class="{ 'block-show': !partForm }">
+        <div class="field">
+          <label class="label">Detaļas nosaukums</label>
+          <div class="control">
+            <input class="input is-success" type="text" v-model="partname" />
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">Daudzums</label>
+          <div class="control">
+            <input
+              class="input is-success"
+              type="text"
+              placeholder="0"
+              v-model="partcount"
+            />
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">Detaļas cena</label>
+          <div class="control">
+            <input
+              class="input is-success"
+              type="text"
+              placeholder="0.00"
+              v-model="partprice"
+            />
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">Kopā</label>
+          <div class="control">
+            <input
+              class="input is-success"
+              type="text"
+              placeholder="0.00"
+              v-model="fullprice"
+            />
+          </div>
+        </div>
+        <div class="field">
+          <button class="button">Registrēt detaļu</button>
+        </div>
+      </div>
+    </form>
+    <div class="columns is-justify-content-space-between is-flex">
+      <div class="column">
+        <h2 class="title">Auto detaļas</h2>
+      </div>
+    </div>
+    <table class="table is-fullwidth">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Detaļas nosaukums</th>
+          <th>Detaļas skaits</th>
+          <th>Vienas vienības cena</th>
+          <th>Pilnā cena</th>
+          <th>Izveides datums</th>
+          <th>Darbības</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="item in partscar" v-bind:key="item">
+          <td>{{ item.id }}</td>
+          <td>{{ item.part_name }}</td>
+          <td>{{ item.part_count }}</td>
+          <td>{{ item.part_price }}</td>
+          <td>{{ item.full_price }}</td>
+          <td>{{ item.create_date }}</td>
+          <td>
+            <router-link :to="'/' + item.id">Labot</router-link>
           </td>
         </tr>
       </tbody>
@@ -131,16 +264,23 @@ export default {
     return {
       order: {},
       show: false,
+      partForm: false,
       servicecar: [],
+      partscar: [],
       worktype: "",
+      workprice: "",
       spendtime: "",
       partname: "",
       partcount: "",
+      partprice: "",
+      fullprice: "",
+      description: "",
     };
   },
   mounted() {
     this.getOrder();
     this.getServices();
+    this.getParts();
   },
   methods: {
     async createOrder() {
@@ -177,7 +317,38 @@ export default {
         .get(`/customer/services/${this.$route.params.id}`)
         .then((res) => {
           this.servicecar = res.data.servicecar;
-          console.log(this.servicecar);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    async getParts() {
+      await axios
+        .get(`/customer/parts/${this.$route.params.id}`)
+        .then((res) => {
+          this.partscar = res.data.partscar;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    async creatPart() {
+      let payload = {
+        part_name: this.partname,
+        description: this.description,
+        part_count: this.partcount,
+        part_price: this.partprice,
+        full_price: this.fullprice,
+      };
+      await axios
+        .post(`/customer/part/${this.$route.params.id}`, payload, {
+          headers: {
+            "Content-type": "application/json",
+          },
+        })
+        .then((res) => {
+          console.log(res);
+          this.reloadpage();
         })
         .catch((error) => {
           console.log(error);
@@ -186,9 +357,9 @@ export default {
     async createService() {
       let payload = {
         work_type: this.worktype,
+        description: this.description,
         spend_time: this.spendtime,
-        part_name: this.partname,
-        part_count: this.partcount,
+        work_price: this.workprice,
         order_id: this.orderid,
       };
       await axios
@@ -207,6 +378,9 @@ export default {
     },
     showBlock(check) {
       this.show = !check;
+    },
+    showPartBlock(check) {
+      this.partForm = !check;
     },
     reloadpage() {
       window.location.reload();
