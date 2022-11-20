@@ -30,58 +30,6 @@
         </button>
       </div>
     </div>
-    <div class="column">
-      <form>
-        <div class="field is-horizontal">
-          <div class="field-label is-normal">
-            <label class="label">Stundas likme</label>
-          </div>
-          <div class="field-body">
-            <div class="field has-addons">
-              <p class="control">
-                <span class="select">
-                  <select>
-                    <option>10</option>
-                    <option>15</option>
-                    <option>20</option>
-                  </select>
-                </span>
-              </p>
-              <p class="control">
-                <input class="input" type="text" placeholder="0.00" />
-              </p>
-              <p class="control">
-                <a class="button"> Noteikt </a>
-              </p>
-            </div>
-          </div>
-        </div>
-        <div class="field is-horizontal">
-          <div class="field-label is-normal">
-            <label class="label">Grūtības pakāpe</label>
-          </div>
-          <div class="field-body">
-            <div class="field has-addons">
-              <p class="control">
-                <span class="select">
-                  <select>
-                    <option>1 %</option>
-                    <option>2 %</option>
-                    <option>3 %</option>
-                  </select>
-                </span>
-              </p>
-              <p class="control">
-                <input class="input" type="text" placeholder="0" />
-              </p>
-              <p class="control">
-                <a class="button"> Noteikt </a>
-              </p>
-            </div>
-          </div>
-        </div>
-      </form>
-    </div>
   </div>
   <form @submit.prevent="createService" method="POST">
     <div class="block" v-bind:class="{ 'block-show': !show }">
@@ -109,20 +57,60 @@
           <input
             class="input is-success"
             type="text"
-            placeholder="Min"
+            placeholder="Darbas"
             v-model="spendtime"
           />
         </div>
       </div>
-      <div class="field">
-        <label class="label">Darba cena</label>
-        <div class="control">
-          <input
-            class="input is-success"
-            type="text"
-            placeholder="0.00"
-            v-model="workprice"
-          />
+      <div class="field is-horizontal">
+        <div class="field-label is-normal">
+          <label class="label">Stundas likme euro</label>
+        </div>
+        <div class="field-body">
+          <div class="field has-addons">
+            <p class="control">
+              <span class="select">
+                <select v-model.number="hourRate">
+                  <option>10</option>
+                  <option>15</option>
+                  <option>20</option>
+                  <option>25</option>
+                  <option>30</option>
+                </select>
+              </span>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="field is-horizontal">
+        <div class="field-label is-normal">
+          <label class="label">Grūtības pakāpe %</label>
+        </div>
+        <div class="field-body">
+          <div class="field has-addons">
+            <p class="control">
+              <input
+                class="input"
+                type="number"
+                min="0"
+                max="100"
+                v-model="rateValue"
+                placeholder="0"
+              />
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="field is-horizontal">
+        <div class="field-label is-normal">
+          <label class="label">Darba cena</label>
+        </div>
+        <div class="field-body">
+          <div class="field has-addons">
+            <p class="control">
+              {{ getWorkPrice }}
+            </p>
+          </div>
         </div>
       </div>
       <div class="field">
@@ -199,15 +187,14 @@
             />
           </div>
         </div>
-        <div class="field">
-          <label class="label">Kopā</label>
-          <div class="control">
-            <input
-              class="input is-success"
-              type="text"
-              placeholder="0.00"
-              v-model="fullprice"
-            />
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">Cena kopā:</label>
+          </div>
+          <div class="field-body">
+            <div class="field has-addons">
+              <p class="control">{{ getFullPartPrice }} euro</p>
+            </div>
           </div>
         </div>
         <div class="field">
@@ -268,14 +255,34 @@ export default {
       servicecar: [],
       partscar: [],
       worktype: "",
-      workprice: "",
-      spendtime: "",
+      spendtime: 0,
       partname: "",
-      partcount: "",
-      partprice: "",
-      fullprice: "",
+      partcount: 0,
+      partprice: 0,
       description: "",
+      hourRate: 0,
+      rateValue: 0,
     };
+  },
+  computed: {
+    getWorkPrice() {
+      const formatter = new Intl.NumberFormat("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
+      return formatter.format(
+        this.spendtime * this.hourRate + (this.hourRate * this.rateValue) / 100
+      );
+    },
+    getFullPartPrice() {
+      const formatter = new Intl.NumberFormat("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+        style: 'decimal',
+        useGrouping: false
+      });
+      return formatter.format(this.partcount * this.partprice);
+    },
   },
   mounted() {
     this.getOrder();
@@ -338,7 +345,7 @@ export default {
         description: this.description,
         part_count: this.partcount,
         part_price: this.partprice,
-        full_price: this.fullprice,
+        full_price: this.getFullPartPrice,
       };
       await axios
         .post(`/customer/part/${this.$route.params.id}`, payload, {
@@ -359,7 +366,7 @@ export default {
         work_type: this.worktype,
         description: this.description,
         spend_time: this.spendtime,
-        work_price: this.workprice,
+        work_price: this.getWorkPrice,
         order_id: this.orderid,
       };
       await axios

@@ -2,12 +2,12 @@
   <h2 class="title">Registrēt klientu</h2>
   <form @submit.prevent="regcustomer" method="POST">
     <div class="field">
-      <label class="label">Vārds Uzvārds</label>
+      <label class="label">Klienta nosaukums</label>
       <div class="control">
         <input
           class="input is-success"
           type="text"
-          placeholder="Vārds Uzvārds"
+          placeholder="Vārds Uzvārds vai uzņēmuma nosaukums"
           v-model="customername"
         />
       </div>

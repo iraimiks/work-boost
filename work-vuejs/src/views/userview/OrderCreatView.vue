@@ -5,88 +5,110 @@
     </div>
   </div>
   <div class="columns">
-    <div class="column is-half is-offset-one-quarter">
-      <h3 class="is-size-3 has-text-centered">AUTOBOOST.LV</h3>
+    <div class="column is-8">
+      <h3 class="is-size-4 has-text-left">
+        Izrakstīšanas datums: <strong>{{ convertDate() }}</strong> (DD.MM.GGGG.)
+      </h3>
+    </div>
+    <div class="column is-8">
+      <h3 class="is-size-4 has-text-left">Rēķins Nr. <strong>XXX</strong></h3>
     </div>
   </div>
   <div class="columns">
     <div class="column is-6">
-      <h3 class="is-size-4 has-text-left">Tel: 27015660</h3>
+      <h3 class="is-size-4 has-text-left">
+        Preču nosūtītājs: <strong>AUTOBOOST SIA</strong>
+      </h3>
     </div>
     <div class="column is-6">
       <h3 class="is-size-4 has-text-left">
-        Pieņemšanas datums: {{ convertDate() }}
+        <strong>LV40203418867</strong>
       </h3>
     </div>
   </div>
   <div class="columns">
     <div class="column is-6">
-      <h3 class="is-size-4 has-text-left">E-mail: autoboostlv@gmail.com</h3>
-    </div>
-    <div class="column is-6">
       <h3 class="is-size-4 has-text-left">
-        Nodošanas datums: {{ convertDate() }}
+        Adrese: <strong>Liepājas iela 5 Ludza</strong>
       </h3>
     </div>
   </div>
   <div class="columns">
-    <div class="column is-3">
-      <h3 class="is-size-4 has-text-left">Ipašnieks:</h3>
+    <div class="column is-6">
+      <h3 class="is-size-4 has-text-left">
+        Norēķinu rekvizīti: <strong>Citadele banka</strong>
+      </h3>
     </div>
-    <div class="column is-3">
-      <h3 class="is-size-4 has-text-left">{{ customer.customer_name }}</h3>
-    </div>
-    <div class="column is-3">
-      <h3 class="is-size-4 has-text-left">Marka:</h3>
-    </div>
-    <div class="column is-3">
-      <h3 class="is-size-4 has-text-left">{{ customer.brand }}</h3>
+    <div class="column is-6">
+      <h3 class="is-size-4 has-text-left">
+        <strong>LV47PARXO027844410001</strong>
+      </h3>
     </div>
   </div>
   <div class="columns">
-    <div class="column is-3">
-      <h3 class="is-size-4 has-text-left">Tel:</h3>
+    <div class="column is-6">
+      <h3 class="is-size-4 has-text-left">
+        Pakalpojuma saņēmējs: <strong>{{ customer.customer_name }}</strong>
+      </h3>
     </div>
-    <div class="column is-3">
-      <h3 class="is-size-4 has-text-left">{{ customer.phone }}</h3>
-    </div>
-    <div class="column is-3">
-      <h3 class="is-size-4 has-text-left">Reg. nr.:</h3>
-    </div>
-    <div class="column is-3">
-      <h3 class="is-size-4 has-text-left">{{ customer.number }}</h3>
+    <div class="column is-6">
+      <h3 class="is-size-4 has-text-left">
+        Reg. nr.: <strong><input /></strong>
+      </h3>
     </div>
   </div>
   <div class="columns">
-    <div class="column is-3">
-      <h3 class="is-size-4 has-text-left">Addrese:</h3>
+    <div class="column is-6">
+      <h3 class="is-size-4 has-text-left">
+        Addrese: <strong><input /></strong>
+      </h3>
     </div>
-    <div class="column is-3">
-      <h3 class="is-size-4 has-text-left">xxx</h3>
+  </div>
+  <div class="columns">
+    <div class="column is-8">
+      <h3 class="is-size-4 has-text-left">
+        Pakalpojuma saņemšanas vieta: <strong>Liepājas iela 5 Ludza</strong>
+      </h3>
     </div>
-    <div class="column is-3">
-      <h3 class="is-size-4 has-text-left">Nobraukums:</h3>
+  </div>
+  <div class="columns">
+    <div class="column is-8">
+      <h3 class="is-size-4 has-text-left">
+        Apmaksas veids un kārtība:
+        <div class="select is-small">
+          <select>
+            <option>Pārskaitījums</option>
+            <option>Ar karti</option>
+          </select>
+        </div>
+      </h3>
     </div>
-    <div class="column is-3">
-      <h3 class="is-size-4 has-text-left">{{ customer.odometer }}</h3>
+  </div>
+  <div class="columns">
+    <div class="column is-6">
+      <h3 class="is-size-4 has-text-left">
+        Auto: <strong>{{ customer.brand }} {{ customer.number }}</strong>
+      </h3>
     </div>
   </div>
   <h2>Detaļu saraksts</h2>
   <table class="table is-fullwidth">
     <thead>
       <tr>
-        <th>Nr.pk.</th>
-        <th>Detaļas nosaukumms</th>
-        <th>Gabals</th>
-        <th>Cena</th>
+        <th>ID</th>
+        <th>Detaļas nosaukums</th>
+        <th>Detaļas skaits</th>
+        <th>Vienas vienības cena</th>
+        <th>Pilnā cena</th>
       </tr>
     </thead>
     <tbody>
-      <tr  v-for="item in services" v-bind:key="item">
-        <td>1</td>
+      <tr v-for="item in partscar" v-bind:key="item">
+        <td>{{ item.id }}</td>
         <td>{{ item.part_name }}</td>
         <td>{{ item.part_count }}</td>
-        <td>CENA NAV</td>
+        <td>{{ item.part_price }}</td>
+        <td>{{ item.full_price }}</td>
       </tr>
     </tbody>
   </table>
@@ -94,16 +116,16 @@
   <table class="table is-fullwidth">
     <thead>
       <tr>
-        <th>Nr.pk.</th>
-        <th>Izpildītais darbs</th>
+        <th>Darba veids</th>
+        <th>Darba apraksts</th>
         <th>Cena</th>
       </tr>
     </thead>
     <tbody>
-      <tr  v-for="item in services" v-bind:key="item">
-        <td>1</td>
+      <tr v-for="item in servicecar" v-bind:key="item">
         <td>{{ item.work_type }}</td>
-        <td>CENA</td>
+        <td>{{ item.description }}</td>
+        <td>{{ item.work_price }}</td>
       </tr>
     </tbody>
   </table>
@@ -124,17 +146,20 @@
   </div>
 </template>
 <script>
-import axios from 'axios'
+import axios from "axios";
 export default {
   name: "OrderCreatView",
   data() {
     return {
       customer: {},
-      services: [],
+      servicecar: [],
+      partscar: [],
     };
   },
   mounted() {
-    this.getOrderData()
+    this.getOrderData();
+    this.getServices();
+    this.getParts();
   },
   methods: {
     convertDate() {
@@ -147,7 +172,27 @@ export default {
         .get(`/customer/orderdata/${this.$route.params.id}`)
         .then((res) => {
           this.customer = res.data.info[0];
-          this.services = res.data.service_car;
+          console.log(this.customer);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    async getServices() {
+      await axios
+        .get(`/customer/services/${this.$route.params.id}`)
+        .then((res) => {
+          this.servicecar = res.data.servicecar;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    async getParts() {
+      await axios
+        .get(`/customer/parts/${this.$route.params.id}`)
+        .then((res) => {
+          this.partscar = res.data.partscar;
         })
         .catch((error) => {
           console.log(error);
@@ -157,12 +202,12 @@ export default {
       await axios
         .get(`/customer/hello_raims.pdf`)
         .then((res) => {
-          console.log(res)
+          console.log(res);
         })
         .catch((error) => {
           console.log(error);
         });
-    }
+    },
   },
 };
 </script>

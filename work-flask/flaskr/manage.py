@@ -5,7 +5,7 @@ from flask import (
 from flaskr import db
 from flaskr.customers.customer import Customer, Car, Order, ServiceCar, OrderData, PartCar
 from flaskr.users.user import User
-from sqlalchemy import desc, or_
+from sqlalchemy import desc
 from flask_weasyprint import HTML, render_pdf
 
 
@@ -94,6 +94,15 @@ def cars():
         cars = Car.query.order_by(desc("id")).all()
         return jsonify({'cars': [car.serialized for car in cars]})
 
+@bp.route('/statuswork', methods=('GET','POST'))
+def status_work():
+    if request.method == 'GET':
+        cars = Car.query.order_by(desc("id")).all()
+        car_ids = [str(car.id) for car in cars]
+        orders = db.session.query(Order).filter(Order.car_id.in_(car_ids))
+        print(orders)
+        return  jsonify({'orders':[order.serialized for order in orders]})
+
 @bp.route('/order', methods=('GET', 'POST'))
 def order():
     if request.method == 'POST':
@@ -147,7 +156,6 @@ def car_order(id):
     if request.method == 'GET':
         order = Order.query.filter_by(id=id).first()
         return jsonify({'order': [order.serialized]})
-
 
 # service api
 @bp.route('/service/<id>', methods=('GET', 'POST'))

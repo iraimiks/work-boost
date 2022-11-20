@@ -5,7 +5,8 @@ export default createStore({
     user: {
       data: [],
     },
-    page: 0
+    hourRate: 0,
+    workRate: 0,
   },
   getters: {
   },
@@ -16,15 +17,18 @@ export default createStore({
       } else {
         localStorage.setItem('user', JSON.stringify(state.user))
       }
-      state.page = 1;
     },
     addToData(state, item) {
       state.user.data.push(item)
       localStorage.setItem('user', JSON.stringify(state.user))
     },
-    pageNum(state, item) {
-      console.log("state", item)
-      state.page = item;
+    addHourRate(state, item) {
+      state.hourRate = item;
+      localStorage.setItem('hourRate', state.hourRate)
+    },
+    addWorkRate(state, item) {
+      state.workRate = item;
+      localStorage.setItem('workRate', state.hourRate)
     }
   },
   actions: {

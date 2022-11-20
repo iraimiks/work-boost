@@ -96,7 +96,7 @@ class ServiceCar(db.Model):
             'work_type': self.work_type,
             'spend_time': self.spend_time,
             'description': self.description,
-            'work_price': self.work_price,
+            'work_price': format(float(self.work_price), '.2f'),
             'create_date': self.create_date,
             'order_id': self.order_id
         }
@@ -123,8 +123,8 @@ class PartCar(db.Model):
             'id': self.id,
             'part_name': self.part_name,
             'part_count': self.part_count,
-            'part_price': self.part_price,
-            'full_price': self.full_price,
+            'part_price': format(float(self.part_price),'.2f'),
+            'full_price': format(float(self.full_price),'.2f'),
             'create_date': self.create_date,
             'order_id': self.order_id
         }

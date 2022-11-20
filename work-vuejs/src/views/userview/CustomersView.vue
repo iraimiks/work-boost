@@ -1,6 +1,18 @@
 <template>
   <div>
     <h2 class="title">Reģistrēti klienti</h2>
+    <div class="field is-horizontal">
+      <div class="field-label is-normal">
+        <label class="label">Meklēt</label>
+      </div>
+      <div class="field-body">
+        <div class="field">
+          <p class="control">
+            <input class="input" v-model="searchWord" type="text" placeholder="Meklēt vārdu" />
+          </p>
+        </div>
+      </div>
+    </div>
     <table class="table is-fullwidth">
       <thead>
         <tr>
@@ -11,7 +23,20 @@
           <th>Darbības</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody v-if="searchWord != ''">
+        <tr v-for="item in filterCustomer" v-bind:key="item">
+          <td>{{ item.id }}</td>
+          <td>{{ item.name }}</td>
+          <td>{{ item.phone }}</td>
+          <td>{{ item.create_date }}</td>
+          <td>
+            <router-link :to="'/dashboard/customers/' + item.id"
+              >Klienta lapa</router-link
+            >
+          </td>
+        </tr>
+      </tbody>
+      <tbody v-else>
         <tr v-for="item in items" v-bind:key="item">
           <td>{{ item.id }}</td>
           <td>{{ item.name }}</td>
@@ -25,7 +50,7 @@
         </tr>
       </tbody>
     </table>
-    <nav class="pagination" role="navigation" aria-label="pagination">
+    <nav class="pagination" role="navigation" aria-label="pagination" v-if="searchWord === ''">
       <a
         class="pagination-previous"
         v-bind:class="{ 'is-disabled': stopLeft }"
@@ -43,17 +68,20 @@
           <a class="pagination-link" @click="currentPageEvent(1)">1 Sākums</a>
         </li>
         <li v-for="n in result" v-bind:key="n">
-          <a class="pagination-link" v-bind:class="{ 'is-current': coloring === n }" @click="currentPageEvent(n)">{{
-            n
-          }}</a>
+          <a
+            class="pagination-link"
+            v-bind:class="{ 'is-current': coloring === n }"
+            @click="currentPageEvent(n)"
+            >{{ n }}</a
+          >
         </li>
         <li v-bind:class="{ 'block-show': !showLastNumber }">
-          <a class="pagination-link"  @click="currentPageEvent(pageCountShow)">{{ pageCountShow }} Pēdējā</a>
+          <a class="pagination-link" @click="currentPageEvent(pageCountShow)"
+            >{{ pageCountShow }} Pēdējā</a
+          >
         </li>
       </ul>
-      
     </nav>
-    
   </div>
 </template>
 <script>
@@ -73,12 +101,20 @@ export default {
       result: [],
       showFirstNumber: false,
       showLastNumber: true,
+      searchWord: "",
+      itemsPerList: 5,
     };
   },
   mounted() {
     this.getCustomers();
   },
-  computed: {},
+  computed: {
+    filterCustomer() {
+      return this.customers.filter(customer => {
+        return customer.name.toLowerCase().indexOf(this.searchWord.toLowerCase()) != -1;
+      });
+    }
+  },
   methods: {
     async getCustomers() {
       await axios
@@ -94,12 +130,12 @@ export default {
     },
     getPages(page) {
       let lens = this.customers.length;
-      if (lens % 2 === 0) {
-        this.pageCountShow = lens / 2;
+      if (lens % this.itemsPerList === 0) {
+        this.pageCountShow = lens / this.itemsPerList;
       } else {
-        this.pageCountShow = Math.round(lens / 2);
+        this.pageCountShow = Math.round(lens / this.itemsPerList);
       }
-      this.items = this.customers.slice((page - 1) * 2, page * 2);
+      this.items = this.customers.slice((page - 1) * this.itemsPerList, page * this.itemsPerList);
     },
     currentPageEvent(num) {
       this.generatePageRange(num, this.pageCountShow);
@@ -133,19 +169,18 @@ export default {
       this.result = Array.from({ length: pageCount }, (v, k) => k + 1).filter(
         (i) => i && i >= left && i < right
       );
-      if(currentPage >= 4) {
+      if (currentPage >= 4) {
         this.showFirstNumber = true;
       } else {
         this.showFirstNumber = false;
       }
 
-      if(currentPage >= 5) {
+      if (currentPage >= 5) {
         this.showLastNumber = false;
       } else {
         this.showLastNumber = true;
       }
     },
-
   },
 };
 </script>

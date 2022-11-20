@@ -43,8 +43,8 @@
           <p class="menu-label">Veicamie darbi</p>
           <ul class="menu-list">
             <li>
-              <router-link to="/dashboard/customerreg"
-                >Veicamie darbi ar auto</router-link
+              <router-link to="/dashboard/inwork"
+                >Visi darbi ar auto</router-link
               >
             </li>
           </ul>
