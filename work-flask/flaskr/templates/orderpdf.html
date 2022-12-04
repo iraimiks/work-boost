@@ -9,139 +9,144 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <style>
-    body
-    {
-        font-family: "Times New Roman", Times, serif;
+    body {
+      font-family: "Times New Roman", Times, serif;
     }
   </style>
 </head>
-<body>
-  <div class="container">
-    <div class="row text-center">
-      <div class="col">
-        AUTOBOOST.LV
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        Tel: 27015660
-      </div>
-      <div class="col">
-        pieņemšanas laiks: 1.11.2022.
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        E-mail: autoboostlv@gmail.com
-      </div>
-      <div class="col">
-        Nodošanas datums: 1.11.2022.
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        Ipašnieks:
-      </div>
-      <div class="col">
-        xxx
-      </div>
-      <div class="col">
-        Marka:
-      </div>
-      <div class="col">
-        xxx
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        Tel:
-      </div>
-      <div class="col">
-        xxx
-      </div>
-      <div class="col">
-        Reg. nr.:
-      </div>
-      <div class="col">
-        xxx
-      </div>
-    </div>
 
+<body>
+  <div class="container-fluid">
     <div class="row">
-      <div class="col">
-        Addrese:
+      <div class="col border border-dark">
+        Rēķina Nr.: <strong>{{ order['order_name'] }}</strong>
       </div>
-      <div class="col">
-        xxx
-      </div>
-      <div class="col">
-        Nobraukums:
-      </div>
-      <div class="col">
-        xxx
+      <div class="col border border-dark">
+        Izrakstīšanas datums: <strong>{{ today }}</strong>
       </div>
     </div>
-    <h3>Detaļu saraksts</h3>
+    <div class="row">
+      <div class="col border border-dark">
+        Uzņēmums: <strong>AUTOBOOST SIA</strong>
+      </div>
+      <div class="col border border-dark">
+        <strong>LV40203418867</strong>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col border border-dark">
+        Adrese: <strong>Liepājas iela 5 Ludza</strong>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col border border-dark">
+        Norēķinu rekvizīti: <strong>Citadele banka</strong>
+      </div>
+      <div class="col border border-dark">
+        <strong>LV47PARXO027844410001</strong>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col border border-dark">
+        Pakalpojuma saņēmējs: <strong>{{ order['customer_name'] }}</strong>
+      </div>
+      <div class="col border border-dark">
+        Reg. nr.: <strong>{{ orderdata['customer_reg_number'] }}</strong>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col border border-dark">
+        Addrese: <strong>{{ orderdata['customer_address'] }}</strong>
+      </div>
+
+    </div>
+    <div class="row">
+      <div class="col border border-dark">
+        Pakalpojuma saņemšanas vieta: <strong>Liepājas iela 5 Ludza</strong>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col border border-dark">
+        Apmaksas veids un kārtība: <strong>{{ orderdata['pay_option'] }}</strong>
+      </div>
+      <div class="col border border-dark">
+        Auto: <strong>{{ order['brand'] }} - {{ order['number'] }}</strong>
+      </div>
+    </div>
+    <hr>
+    <h2>Detaļu saraksts</h2>
     <table class="table">
       <thead>
         <tr>
-          <th scope="col">Nr.pk.</th>
-          <th scope="col">Detaļas nosaukumms</th>
-          <th scope="col">Gabals</th>
-          <th scope="col">Cena</th>
+          <th>ID</th>
+          <th>Detaļas nosaukums</th>
+          <th>Detaļas skaits</th>
+          <th>Vienas vienības cena</th>
+          <th>Pilnā cena</th>
         </tr>
       </thead>
       <tbody>
+        {% for part in parts %}
         <tr>
-          <th scope="row">1</th>
-          <td>Mark</td>
-          <td>Otto</td>
-          <td>@mdo</td>
+          <td>{{ part['id'] }}</td>
+          <td>{{ part['part_name'] }}</td>
+          <td>{{ part['part_count'] }}</td>
+          <td>{{ part['part_price'] }}</td>
+          <td>{{ part['full_price'] }}</td>
         </tr>
-        <tr>
-          <th scope="row">2</th>
-          <td>Jacob</td>
-          <td>Thornton</td>
-          <td>@fat</td>
-        </tr>
-        <tr>
-          <th scope="row">3</th>
-          <td colspan="2">Larry the Bird</td>
-          <td>@twitter</td>
-        </tr>
+        {% endfor %}
       </tbody>
     </table>
-    <h3>Izdarītā darba saraksts</h3>
+    <div class="row">
+      <div class="col border border-dark">
+        Par detaļām kopā: <strong>{{ orderdata['full_part_price'] }} euro</strong>
+      </div>
+    </div>
+    <hr>
+    <h2>Daraba saraksts</h2>
     <table class="table">
       <thead>
         <tr>
-          <th scope="col">Nr.pk.</th>
-          <th scope="col">Izpildītais darbs</th>
-          <th scope="col">Cena</th>
+          <th>Darba veids</th>
+          <th>Darba apraksts</th>
+          <th>Cena</th>
         </tr>
       </thead>
       <tbody>
+        {% for service in services %}
         <tr>
-          <th scope="row">1</th>
-          <td>Mark</td>
-          <td>Otto</td>
+          <td>{{ service['work_type'] }}</td>
+          <td>{{ service['description'] }}</td>
+          <td>{{ service['work_price'] }}</td>
         </tr>
-        <tr>
-          <th scope="row">2</th>
-          <td>Jacob</td>
-          <td>Thornton</td>
-        </tr>
-        <tr>
-          <th scope="row">3</th>
-          <td>Larry the Bird</td>
-          <td>@twitter</td>
-        </tr>
+        {% endfor %}
       </tbody>
     </table>
-    <h2>Summa apmaksai kopā: 300 $</h2>
-    <h2>Darbus veica: Antons</h2>
+    <div class="row">
+      <div class="col border border-dark">
+        Par detaļām kopā: <strong>{{ orderdata['full_service_price'] }} euro</strong>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col border border-dark">
+        Pavisam apmaksai: <strong>{{ orderdata['full_price'] }} euro</strong> 
+      </div>
+      <div class="col border border-dark">
+        Vardiem: <strong>{{ orderdata['price_in_words'] }}</strong>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col border border-dark">
+        Izsniedza: <strong>{{ orderdata['order_prep_name'] }}</strong>
+      </div>
+      <div class="col border border-dark">
+        Saņēma: <strong>{{ orderdata['order_get_name'] }}</strong>
+      </div>
+    </div>
   </div>
-  
+  <h3>Rēķins sagatavots elektronisķi, derīgs bez paraksta</h3>
 </body>
 
 </html>

@@ -12,7 +12,7 @@
   </div>
   <br />
   <div class="field">
-    <button class="button" @click="showBlock(show)">
+    <button class="button is-info" @click="showBlock(show)">
       Auto registrācijas forma
     </button>
   </div>
@@ -25,7 +25,7 @@
           <input
             class="input is-success"
             type="text"
-            placeholder="Audi"
+            placeholder="Auto modelis un tā nosaukums"
             v-model="carbrand"
           />
         </div>

@@ -25,7 +25,7 @@
   <div class="columns">
     <div class="column">
       <div class="field">
-        <button class="button" @click="showBlock(show)">
+        <button class="button is-info" @click="showBlock(show)">
           Darba registrācija
         </button>
       </div>
@@ -114,7 +114,7 @@
         </div>
       </div>
       <div class="field">
-        <button class="button">Registrēt darbu</button>
+        <button class="button is-warning is-light">Registrēt darbu</button>
       </div>
     </div>
   </form>
@@ -153,7 +153,7 @@
       </tbody>
     </table>
     <div class="field">
-      <button class="button" @click="showPartBlock(partForm)">
+      <button class="button is-info" @click="showPartBlock(partForm)">
         Detaļu registrācija
       </button>
     </div>
@@ -198,7 +198,7 @@
           </div>
         </div>
         <div class="field">
-          <button class="button">Registrēt detaļu</button>
+          <button class="button is-warning is-light">Registrēt detaļu</button>
         </div>
       </div>
     </form>
@@ -237,7 +237,7 @@
       <h2 class="title">Izviedot pavadzīmi</h2>
       <form @submit.prevent="createOrder" method="POST">
         <div class="field">
-          <button class="button">Veidot</button>
+          <button class="button is-warning is-light">Veidot</button>
         </div>
       </form>
     </div>

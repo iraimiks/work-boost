@@ -1,82 +1,94 @@
 <template>
   <div class="card">
     <div class="card-content">
-      <p class="subtitle">Pasūtījuma sagataves forma</p>
+      <p class="title">Pasūtījuma sagataves forma</p>
     </div>
   </div>
+  <hr />
   <div class="columns">
-    <div class="column is-8">
+    <div class="column is-6 border-box">
       <h3 class="is-size-4 has-text-left">
-        Izrakstīšanas datums: <strong>{{ convertDate() }}</strong> (DD.MM.GGGG.)
+        Nodošanas datums: <strong>{{ convertDate(Date.now()) }}</strong>
       </h3>
     </div>
-    <div class="column is-8">
-      <h3 class="is-size-4 has-text-left">Rēķins Nr. <strong>XXX</strong></h3>
+    <div class="column is-6 border-box">
+      <h3 class="is-size-4 has-text-left">
+        Rēķina Nr. <strong>{{ customer.order_name }}</strong>
+      </h3>
     </div>
   </div>
   <div class="columns">
-    <div class="column is-6">
+    <div class="column is-6 border-box">
+      <h3 class="is-size-4 has-text-left">
+        Pieņemšanas datums:
+        <strong>{{ convertDate(customer.create_in) }}</strong>
+      </h3>
+    </div>
+  </div>
+  <div class="columns">
+    <div class="column is-6 border-box">
       <h3 class="is-size-4 has-text-left">
         Preču nosūtītājs: <strong>AUTOBOOST SIA</strong>
       </h3>
     </div>
-    <div class="column is-6">
+    <div class="column is-6 border-box">
       <h3 class="is-size-4 has-text-left">
         <strong>LV40203418867</strong>
       </h3>
     </div>
   </div>
   <div class="columns">
-    <div class="column is-6">
+    <div class="column is-6 border-box">
       <h3 class="is-size-4 has-text-left">
         Adrese: <strong>Liepājas iela 5 Ludza</strong>
       </h3>
     </div>
   </div>
   <div class="columns">
-    <div class="column is-6">
+    <div class="column is-6 border-box">
       <h3 class="is-size-4 has-text-left">
         Norēķinu rekvizīti: <strong>Citadele banka</strong>
       </h3>
     </div>
-    <div class="column is-6">
+    <div class="column is-6 border-box">
       <h3 class="is-size-4 has-text-left">
         <strong>LV47PARXO027844410001</strong>
       </h3>
     </div>
   </div>
+  <hr />
   <div class="columns">
-    <div class="column is-6">
+    <div class="column is-6 border-box">
       <h3 class="is-size-4 has-text-left">
         Pakalpojuma saņēmējs: <strong>{{ customer.customer_name }}</strong>
       </h3>
     </div>
-    <div class="column is-6">
+    <div class="column is-6 border-box">
       <h3 class="is-size-4 has-text-left">
-        Reg. nr.: <strong><input /></strong>
+        Reg. nr.: <strong><input v-model="customerRegNumber"/></strong>
       </h3>
     </div>
   </div>
   <div class="columns">
-    <div class="column is-6">
+    <div class="column is-6 border-box">
       <h3 class="is-size-4 has-text-left">
-        Addrese: <strong><input /></strong>
+        Addrese: <strong><input v-model="customerAddress"/></strong>
       </h3>
     </div>
   </div>
   <div class="columns">
-    <div class="column is-8">
+    <div class="column is-8 border-box">
       <h3 class="is-size-4 has-text-left">
         Pakalpojuma saņemšanas vieta: <strong>Liepājas iela 5 Ludza</strong>
       </h3>
     </div>
   </div>
   <div class="columns">
-    <div class="column is-8">
+    <div class="column is-8 border-box">
       <h3 class="is-size-4 has-text-left">
         Apmaksas veids un kārtība:
-        <div class="select is-small">
-          <select>
+        <div class="select">
+          <select v-model="payOption">
             <option>Pārskaitījums</option>
             <option>Ar karti</option>
           </select>
@@ -85,7 +97,7 @@
     </div>
   </div>
   <div class="columns">
-    <div class="column is-6">
+    <div class="column is-6 border-box">
       <h3 class="is-size-4 has-text-left">
         Auto: <strong>{{ customer.brand }} {{ customer.number }}</strong>
       </h3>
@@ -112,6 +124,13 @@
       </tr>
     </tbody>
   </table>
+  <div class="columns">
+    <div class="column">
+      <h4 class="is-size-4 has-text-left">
+        Par detaļām kopā: {{ getFullPartPrice }} euro
+      </h4>
+    </div>
+  </div>
   <h2>Izdarītā darba saraksts</h2>
   <table class="table is-fullwidth">
     <thead>
@@ -131,18 +150,47 @@
   </table>
   <div class="columns">
     <div class="column">
-      <h3 class="is-size-3 has-text-left">Summa apmaksai kopā: Nav vel</h3>
+      <h4 class="is-size-4 has-text-left">
+        Par darbu kopā: {{ getFullServicePrice }} euro
+      </h4>
+    </div>
+    <div class="column">
+      <h4 class="is-size-4 has-text-left">
+        Summas ir norādītas ar 21% nodokli
+      </h4>
     </div>
   </div>
   <div class="columns">
     <div class="column">
-      <h3 class="is-size-3 has-text-left">Darbus veica: Nav vel</h3>
+      <h4 class="is-size-4 has-text-left">Kopā: {{ getFullPrice }} euro</h4>
+    </div>
+    <div class="column">
+      <h4 class="is-size-4 has-text-left">Vārdiem: <input v-model="priceInWords"/></h4>
+    </div>
+  </div>
+  <div class="columns">
+    <div class="column">
+      <h4 class="is-size-4 has-text-left">
+        Iznsniedza: <input v-model="orderPrepName"/>
+      </h4>
+    </div>
+    <div class="column">
+      <h4 class="is-size-4 has-text-left">
+        Saņēma: <input v-model="orderGetName"/>
+      </h4>
     </div>
   </div>
   <div class="field">
-    <router-link class="button" :to="'/'">
-      Sagatavot pavadzīmi PDF formātā
-    </router-link>
+    <form @submit.prevent="additionOrderData" method="POST">
+    <button class="button is-warning is-light" @click="addData">
+      Saglabāt
+    </button>
+    </form>
+
+    -->
+    <button class="button is-warning is-light" @click="getPdfTest">
+      Sagatavot pdf
+    </button>
   </div>
 </template>
 <script>
@@ -154,6 +202,12 @@ export default {
       customer: {},
       servicecar: [],
       partscar: [],
+      customerRegNumber: "",
+      customerAddress: "",
+      payOption: "",
+      orderPrepName: "",
+      orderGetName: "",
+      priceInWords: "",
     };
   },
   mounted() {
@@ -161,11 +215,76 @@ export default {
     this.getServices();
     this.getParts();
   },
+  computed: {
+    getFullPartPrice() {
+      const formatter = new Intl.NumberFormat("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+        style: "decimal",
+        useGrouping: false,
+      });
+      return formatter.format(
+        this.partscar.reduce((p, all) => p + parseInt(all.full_price), 0) +
+          this.partscar.reduce((p, all) => p + parseInt(all.full_price), 0) *
+            0.21
+      );
+    },
+    getFullServicePrice() {
+      const formatter = new Intl.NumberFormat("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+        style: "decimal",
+        useGrouping: false,
+      });
+      return formatter.format(
+        this.servicecar.reduce((p, all) => p + parseInt(all.work_price), 0) +
+          this.servicecar.reduce((p, all) => p + parseInt(all.work_price), 0) *
+            0.21
+      );
+    },
+    getFullPrice() {
+      const formatter = new Intl.NumberFormat("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+        style: "decimal",
+        useGrouping: false,
+      });
+      return formatter.format(
+        parseFloat(this.getFullServicePrice) + parseFloat(this.getFullPartPrice)
+      );
+    },
+  },
   methods: {
-    convertDate() {
-      let date = Date.now();
-      let todaDay = new Date(date);
-      return todaDay.toLocaleDateString("lv-LV");
+    convertDate(date) {
+      this.date = new Date(date);
+      return this.date.toLocaleDateString("lv-LV");
+    },
+    async additionOrderData() {
+      let payload = {
+        full_service_price: this.getFullServicePrice,
+        full_part_price: this.getFullPartPrice,
+        customer_reg_number: this.customerRegNumber,
+        customer_address: this.customerAddress,
+        pay_option: this.payOption,
+        full_price: this.getFullPrice,
+        order_prep_name: this.orderPrepName,
+        order_get_name: this.orderGetName,
+        price_in_words: this.priceInWords,
+        order_id: this.$route.params.id,
+      };
+
+      await axios
+        .post(`/customer/addorderdata`, payload, {
+          headers: {
+            "Content-type": "application/json",
+          },
+        })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     async getOrderData() {
       await axios
@@ -200,9 +319,17 @@ export default {
     },
     async getPdfTest() {
       await axios
-        .get(`/customer/hello_raims.pdf`)
+        .get(`/customer/pdforder/${this.$route.params.id}`, {
+          responseType: "blob",
+        })
         .then((res) => {
           console.log(res);
+          const blob = new Blob([res.data], {
+            type: res.headers["content-type"],
+          });
+          const objectUrl = URL.createObjectURL(blob);
+          this.pdfsrc = objectUrl;
+          window.open(this.pdfsrc, "_blank");
         })
         .catch((error) => {
           console.log(error);
@@ -211,3 +338,8 @@ export default {
   },
 };
 </script>
+<style>
+.border-box {
+  border: black solid 1px;
+}
+</style>

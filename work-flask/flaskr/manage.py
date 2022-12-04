@@ -3,7 +3,7 @@ from flask import (
     Blueprint, request, jsonify, render_template
 )
 from flaskr import db
-from flaskr.customers.customer import Customer, Car, Order, ServiceCar, OrderData, PartCar
+from flaskr.customers.customer import Customer, Car, Order, ServiceCar, OrderData, PartCar, AddOrderData
 from flaskr.users.user import User
 from sqlalchemy import desc
 from flask_weasyprint import HTML, render_pdf
@@ -12,8 +12,21 @@ from flask_weasyprint import HTML, render_pdf
 bp = Blueprint('customer', __name__, url_prefix='/customer')
 #pdf generate
 
+@bp.route('/pdforder/<id>', methods=('GET', 'POST'))
+def hello_pdf(id):
+    time = datetime.datetime.now()
+
+    if request.method == 'GET':
+        order = OrderData.query.filter_by(order_id=id).first()
+        parts = PartCar.query.filter_by(order_id=id).all()
+        services = ServiceCar.query.filter_by(order_id=id).all()
+        orderdata = AddOrderData.query.filter_by(order_id=id).first()
+        html = render_template('orderpdf.html', order=order, parts=parts, services=services, orderdata=orderdata, today=time.strftime("%d/%m/%y"))
+    return render_pdf(HTML(string=html))
+
+
 @bp.route('/hello_raims.pdf')
-def hello_pdf():
+def hello_pdf_check():
     # Make a PDF straight from HTML in a string.
     html = render_template('orderpdf.html')
     return render_pdf(HTML(string=html))
@@ -119,7 +132,35 @@ def order():
         db.session.commit()
         return jsonify(status="orderregister")
 
-
+@bp.route('/addorderdata', methods=('GET', 'POST'))
+def add_Order_data():
+    if request.method == 'POST':
+        json_data = request.get_json()
+        full_service_price = json_data['full_service_price']
+        full_part_price = json_data['full_part_price']
+        customer_reg_number = json_data['customer_reg_number']
+        customer_address = json_data['customer_address']
+        pay_option = json_data['pay_option']
+        full_price = json_data['full_price']
+        order_prep_name = json_data['order_prep_name']
+        order_get_name = json_data['order_get_name']
+        price_in_words = json_data['price_in_words']
+        order_id = json_data['order_id']
+        new_add_order_data = AddOrderData(
+            full_service_price,
+            full_part_price,
+            customer_reg_number,
+            customer_address,
+            pay_option,
+            full_price,
+            order_prep_name,
+            order_get_name,
+            price_in_words,
+            order_id
+        )
+        db.session.add(new_add_order_data)
+        db.session.commit()
+        return jsonify(status="orderdatarecive")
 
 @bp.route('/orderdata', methods=('GET', 'POST'))
 def order_data():
@@ -139,6 +180,7 @@ def order_data():
             customer_car.odometer,
             car_order.create_date,
             car_order.id,
+            car_order.name,
             create_out=datetime.datetime.now(),
             )
         db.session.add(new_order_data)
