@@ -14,6 +14,12 @@
       <p class="help is-success" v-bind:class="{ 'block-show': showProblem }">
         Klients registrēts
       </p>
+      <p
+        class="help is-success"
+        v-bind:class="{ 'block-show': showProblemName }"
+      >
+        Aizpildi klienta nosaukums
+      </p>
     </div>
     <div class="field">
       <label class="label">Telefons</label>
@@ -28,12 +34,23 @@
       <p class="help is-success" v-bind:class="{ 'block-show': showProblem }">
         Registrēts talrunis
       </p>
+      <p
+        class="help is-success"
+        v-bind:class="{ 'block-show': showProblemPhone }"
+      >
+        Aizpildi talruni
+      </p>
     </div>
     <div class="field">
-      <button class="button">Registrēt</button>
-    </div>
-    <div class="field" v-bind:class="{ 'block-show': showLinkToCustomer }">
-            <router-link class="button" :to="'/dashboard/customers/' + customerid">Klienta lapa</router-link>
+      <p class="buttons">
+        <button class="button">Registrēt</button>
+        <router-link
+          class="button is-primary"
+          v-bind:class="{ 'block-show': showLinkToCustomer }"
+          :to="'/dashboard/customers/' + customerid"
+          >Klienta lapa</router-link
+        >
+      </p>
     </div>
   </form>
   <br />
@@ -49,29 +66,50 @@ export default {
       customerid: "",
       phone: "",
       customername: "",
+      showProblemName: true,
+      showProblemPhone: true,
     };
   },
   methods: {
+    isEmptyFields() {
+      if (this.customername === "") {
+        this.showProblemName = false;
+        return false;
+      } else if (this.phone === "") {
+        this.showProblemPhone = false;
+        return false;
+      } else {
+        this.showProblemName = true;
+        this.showProblemPhone = true;
+        return true;
+      }
+    },
+
     async regcustomer() {
-      let payload = { customername: this.customername, phone: this.phone };
-      await axios
-        .post("/customer/reg", payload, {
-          headers: {
-            "Content-type": "application/json",
-          },
-        })
-        .then((res) => {
-          if (res.data.status === "exist_phone") {
-            this.showProblem = false;
-            this.showLinkToCustomer = false;
-            this.customerid = res.data.customer_id;
-          } else {
-            window.location.href = '/dashboard/customers/' + res.data.redid;
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      console.log(this.customername);
+      console.log(this.phone);
+      console.log(this.isEmptyFields());
+      if (this.isEmptyFields()) {
+        let payload = { customername: this.customername, phone: this.phone };
+        await axios
+          .post("/customer/reg", payload, {
+            headers: {
+              "Content-type": "application/json",
+            },
+          })
+          .then((res) => {
+            if (res.data.status === "exist_phone") {
+              this.showProblem = false;
+              this.showLinkToCustomer = false;
+              this.customerid = res.data.customer_id;
+            } else {
+              window.location.href = "/dashboard/customers/" + res.data.redid;
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
     },
   },
 };

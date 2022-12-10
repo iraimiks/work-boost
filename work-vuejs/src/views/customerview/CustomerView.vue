@@ -9,7 +9,45 @@
       </p>
       <p class="subtitle">Telefons: {{ customer.phone }}</p>
     </div>
+    <footer class="card-footer">
+      <a @click="showEditBlock(showEdit)" class="card-footer-item">Labot</a>
+      <a href="#" class="card-footer-item">Dzēst "nestrādā"</a>
+    </footer>
   </div>
+  <div class="card" v-bind:class="{ 'block-show': !showEdit }">
+    <div class="card-content">
+      <div class="content">
+          <form @submit.prevent="editCustomerData" method="POST">
+            <div class="field">
+              <label class="label">Klienta vārds</label>
+              <div class="control">
+                <input
+                  class="input is-success"
+                  type="text"
+                  placeholder="Vārds Uzvārds vai uzņēmuma nosaukums"
+                  v-model="customer.name"
+                />
+              </div>
+            </div>
+            <div class="field">
+              <label class="label">Telefons</label>
+              <div class="control">
+                <input
+                  class="input"
+                  type="text"
+                  placeholder="2*******"
+                  v-model="customer.phone"
+                />
+              </div>
+            </div>
+            <div class="field">
+              <button class="button is-warning">Labot datus</button>
+            </div>
+          </form>
+      </div>
+    </div>
+  </div>
+
   <br />
   <div class="field">
     <button class="button is-info" @click="showBlock(show)">
@@ -67,7 +105,7 @@
         </div>
       </div>
       <div class="field">
-        <button class="button">Registrēt auto</button>
+        <button class="button is-warning">Registrēt auto</button>
       </div>
     </div>
   </form>
@@ -114,6 +152,7 @@ export default {
     return {
       cars: [],
       show: false,
+      showEdit: false,
       numberexist: true,
       customer: {},
       carbrand: "",
@@ -147,6 +186,25 @@ export default {
           console.log(error);
         });
     },
+    async editCustomerData() {
+      let payload = {
+        edit_name: this.customer.name,
+        edit_phone: this.customer.phone,
+      };
+      await axios
+        .post(`/customer/dataedit/${this.$route.params.id}`, payload, {
+          headers: {
+            "Content-type": "application/json",
+          },
+        })
+        .then((res) => {
+          console.log(res);
+          this.reloadpage();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
     async regcustcar() {
       let payload = {
         carbrand: this.carbrand,
@@ -174,6 +232,9 @@ export default {
     },
     showBlock(check) {
       this.show = !check;
+    },
+    showEditBlock(check) {
+      this.showEdit = !check;
     },
     reloadpage() {
       window.location.reload();

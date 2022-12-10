@@ -8,13 +8,13 @@
       <p class="card-footer-item">
         <span>
           <h3>Klienti: {{ customers.length }}</h3>
-          <button @click="getItems(true, 1)">Apskatīt</button>
+          <router-link class="button is-info" :to="'/dashboard/customers'">Apskatīt</router-link>
         </span>
       </p>
       <p class="card-footer-item">
         <span>
           <h3>Darbinieki: {{ workers.length }}</h3>
-          <button @click="getItems(false, 1)">Apskatīt</button>
+          <router-link class="button is-info" :to="'/dashboard/workers'">Apskatīt</router-link>
         </span>
       </p>
     </footer>
@@ -34,7 +34,6 @@ export default {
       customers: [],
       workers: [],
       items: [],
-
       user: "",
       today: "",
 

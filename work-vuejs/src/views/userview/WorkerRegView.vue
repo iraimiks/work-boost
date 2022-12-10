@@ -11,7 +11,9 @@
           v-model="name"
         />
       </div>
-      <p class="help is-success" v-bind:class="{ 'block-show': workerProblem }">Registrēts darbinieks</p>
+      <p class="help is-success" v-bind:class="{ 'block-show': workerProblem }">
+        Registrēts darbinieks
+      </p>
     </div>
     <div class="field">
       <label class="label">Telefons</label>
@@ -23,7 +25,9 @@
           v-model="phone"
         />
       </div>
-      <p class="help is-success" v-bind:class="{ 'block-show': phoneProblem }">Registrēts talrunis</p>
+      <p class="help is-success" v-bind:class="{ 'block-show': phoneProblem }">
+        Registrēts talrunis
+      </p>
     </div>
     <div class="field">
       <label class="label">Lietotāj vārds</label>
@@ -35,7 +39,12 @@
           v-model="username"
         />
       </div>
-      <p class="help is-success" v-bind:class="{ 'block-show': usernameProblem }">Lietotāja vārds</p>
+      <p
+        class="help is-success"
+        v-bind:class="{ 'block-show': usernameProblem }"
+      >
+        Lietotāja vārds
+      </p>
     </div>
     <div class="field">
       <label class="label">Parole</label>
@@ -44,16 +53,21 @@
       </div>
     </div>
     <div class="field">
-      <button class="button">Registrēt</button>
-    </div>
-    <div class="field" v-bind:class="{ 'block-show': showLinkToWorker }">
-            <router-link class="button" :to="'/dashboard/customers/' + customerid">Klienta lapa</router-link>
+      <p class="buttons">
+        <button class="button">Registrēt</button>
+        <router-link
+          class="button is-primary"
+          v-bind:class="{ 'block-show': showLinkToWorker }"
+          :to="'/dashboard/customers/' + customerid"
+          >Klienta lapa</router-link
+        >
+      </p>
     </div>
   </form>
   <br />
 </template>
 <script>
-import axios from 'axios'
+import axios from "axios";
 export default {
   name: "WorkerRegView",
   data() {
@@ -86,12 +100,12 @@ export default {
         })
         .then((res) => {
           console.log(res);
-          if(res.data.status === "exist_worker") {
-              this.workerProblem = false;
-              this.phoneProblem = false;
-              this.usernameProblem = false;
-              this.showLinkToWorker = false;
-              this.workerid = res.data.worker;
+          if (res.data.status === "exist_worker") {
+            this.workerProblem = false;
+            this.phoneProblem = false;
+            this.usernameProblem = false;
+            this.showLinkToWorker = false;
+            this.workerid = res.data.worker;
           }
         })
         .catch((error) => {

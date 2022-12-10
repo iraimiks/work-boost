@@ -47,6 +47,18 @@ def customer_reg():
         else:
             return jsonify(status="exist_phone", customer_id=customer_phone.id)
 
+@bp.route('/dataedit/<id>', methods=('GET', 'POST'))
+def customer_edit(id):
+    customer = Customer.query.get(id)
+    if request.method == 'POST':
+        json_data = request.get_json()
+        customer_name = json_data['edit_name']
+        phone = json_data['edit_phone']
+        customer.customer_name = customer_name
+        customer.phone = phone
+        db.session.commit()
+        return jsonify(status="customer_edit")
+
 
 @bp.route('/carreg/<id>', methods=('GET', 'POST'))
 def customer_car_reg(id):
@@ -64,6 +76,24 @@ def customer_car_reg(id):
             return jsonify(status="carregister")
         else:
             return jsonify(status="exist_car", car=car_number.number)
+
+@bp.route('/caredit/<id>', methods=('GET', 'POST'))
+def car_edit(id):
+    car = Car.query.get(id)
+    if request.method == 'POST':
+        json_data = request.get_json()
+        
+        carbrand = json_data['car_brand']
+        car_number = json_data['car_number']
+        vinnumber = json_data['vinnumber']
+        odometer = json_data['odometer']
+        car.brand = carbrand
+        car.number = car_number
+        car.vinnumber = vinnumber
+        car.odometer = odometer
+        db.session.commit()
+        return jsonify(status="car_edit")
+
 
 @bp.route('/list', methods=('GET', 'POST'))
 def all_customers():

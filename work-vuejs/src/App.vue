@@ -1,7 +1,4 @@
 <template>
-  <nav>
-    <!--<button @click="logout">Logout</button>-->
-  </nav>
   <router-view />
 </template>
 <script>

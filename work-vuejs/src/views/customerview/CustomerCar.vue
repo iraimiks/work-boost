@@ -18,6 +18,67 @@
         Izveides datums: <strong>{{ convertDate(car.create_date) }}</strong>
       </p>
     </div>
+    <footer class="card-footer">
+      <a @click="showEditBlock(showEdit)" class="card-footer-item">Labot</a>
+      <a href="#" class="card-footer-item">Klienta lapa</a>
+    </footer>
+  </div>
+  <div class="card" v-bind:class="{ 'block-show': !showEdit }">
+    <div class="card-content">
+      <div class="content">
+        <form @submit.prevent="editCustomerCar" method="POST">
+          <div class="block">
+            <div class="field">
+              <label class="label">Modelis</label>
+              <div class="control">
+                <input
+                  class="input is-success"
+                  type="text"
+                  placeholder="Auto modelis un tā nosaukums"
+                  v-model="car.brand"
+                />
+              </div>
+            </div>
+            <div class="field">
+              <label class="label">Auto numurs</label>
+              <div class="control">
+                <input
+                  class="input"
+                  type="text"
+                  placeholder="LV-XXXX"
+                  v-model="car.number"
+                />
+              </div>
+            </div>
+            <div class="field">
+              <label class="label">VIN numurs</label>
+              <div class="control">
+                <input
+                  class="input"
+                  type="text"
+                  placeholder="VIN##########"
+                  v-model="car.vinnumber"
+                />
+              </div>
+            </div>
+            <div class="field">
+              <label class="label">Odometra rādītājs</label>
+              <div class="control">
+                <input
+                  class="input"
+                  type="numbers"
+                  placeholder="Nobraukums"
+                  v-model="car.odometer"
+                />
+              </div>
+            </div>
+            <div class="field">
+              <button class="button is-warning">Labot auto</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
   <br />
   <div class="field">
@@ -83,6 +144,7 @@ export default {
       workers: [],
       carorders: [],
       show: false,
+      showEdit: false,
       worker: "",
     };
   },
@@ -107,6 +169,27 @@ export default {
         .get(`/customer/workers`)
         .then((res) => {
           this.workers = res.data.workers;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    async editCustomerCar() {
+      let payload = {
+        car_brand: this.car.brand,
+        car_number: this.car.number,
+        vinnumber: this.car.vinnumber,
+        odometer: this.car.odometer,
+      };
+      await axios
+        .post(`/customer/caredit/${this.$route.params.id}`, payload, {
+          headers: {
+            "Content-type": "application/json",
+          },
+        })
+        .then((res) => {
+          this.reloadpage();
+          console.log(res);
         })
         .catch((error) => {
           console.log(error);
@@ -142,6 +225,9 @@ export default {
     },
     reloadpage() {
       window.location.reload();
+    },
+    showEditBlock(check) {
+      this.showEdit = !check;
     },
     showBlock(check) {
       this.show = !check;
