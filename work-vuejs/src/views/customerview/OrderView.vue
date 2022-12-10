@@ -69,15 +69,14 @@
         <div class="field-body">
           <div class="field has-addons">
             <p class="control">
-              <span class="select">
-                <select v-model.number="hourRate">
-                  <option>10</option>
-                  <option>15</option>
-                  <option>20</option>
-                  <option>25</option>
-                  <option>30</option>
-                </select>
-              </span>
+              <input
+                class="input"
+                type="number"
+                min="0"
+                max="100"
+                v-model="hourRate"
+                placeholder="0"
+              />
             </p>
           </div>
         </div>
@@ -124,6 +123,23 @@
         <h2 class="title">Darbs ar auto</h2>
       </div>
     </div>
+    <form @submit.prevent="editRowData" method="POST">
+      <table class="table is-fullwidth">
+        <tbody>
+          <tr v-bind:class="{ 'block-show': !showEdit }">
+            <td>{{ serviceEditObj.id }}</td>
+            <td><input v-model="serviceEditObj.work_type" /></td>
+            <td><input v-model="serviceEditObj.description" /></td>
+            <td><input v-model="serviceEditObj.spend_time" /></td>
+            <td><input v-model="serviceEditObj.work_price" /></td>
+            <td>{{ serviceEditObj.create_date }}</td>
+            <td>
+              <button class="button is-warning">Apstiprināt</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </form>
     <table class="table is-fullwidth">
       <thead>
         <tr>
@@ -145,13 +161,12 @@
           <td>{{ item.work_price }}</td>
           <td>{{ item.create_date }}</td>
           <td>
-            <router-link :to="'/' + item.customer_id + '/car/' + item.id"
-              >Labot</router-link
-            >
+            <a @click="showEditBlock(showEdit, item.id)">Labot</a>
           </td>
         </tr>
       </tbody>
     </table>
+
     <div class="field">
       <button class="button is-info" @click="showPartBlock(partForm)">
         Detaļu registrācija
@@ -207,6 +222,23 @@
         <h2 class="title">Auto detaļas</h2>
       </div>
     </div>
+    <form @submit.prevent="editPartRowData" method="POST">
+      <table class="table is-fullwidth">
+        <tbody>
+          <tr v-bind:class="{ 'block-show': !showPartEdit }">
+            <td>{{ partEditObj.id }}</td>
+            <td><input v-model="partEditObj.part_name" /></td>
+            <td><input v-model="partEditObj.part_count" /></td>
+            <td><input v-model="partEditObj.part_price" /></td>
+            <td><input v-model="this.getFullPartEditPrice" /></td>
+            <td>{{ partEditObj.create_date }}</td>
+            <td>
+              <button class="button is-warning">Apstiprināt</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </form>
     <table class="table is-fullwidth">
       <thead>
         <tr>
@@ -228,7 +260,7 @@
           <td>{{ item.full_price }}</td>
           <td>{{ item.create_date }}</td>
           <td>
-            <router-link :to="'/' + item.id">Labot</router-link>
+            <a @click="showEditPartBlock(showPartEdit, item.id)">Labot</a>
           </td>
         </tr>
       </tbody>
@@ -250,6 +282,8 @@ export default {
   data() {
     return {
       order: {},
+      serviceEditObj: {},
+      partEditObj: {},
       show: false,
       partForm: false,
       servicecar: [],
@@ -262,6 +296,8 @@ export default {
       description: "",
       hourRate: 0,
       rateValue: 0,
+      showEdit: false,
+      showPartEdit: false,
     };
   },
   computed: {
@@ -278,10 +314,19 @@ export default {
       const formatter = new Intl.NumberFormat("en-US", {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
-        style: 'decimal',
-        useGrouping: false
+        style: "decimal",
+        useGrouping: false,
       });
       return formatter.format(this.partcount * this.partprice);
+    },
+    getFullPartEditPrice() {
+      const formatter = new Intl.NumberFormat("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+        style: "decimal",
+        useGrouping: false,
+      });
+      return formatter.format(this.partEditObj.part_count * this.partEditObj.part_price);
     },
   },
   mounted() {
@@ -342,7 +387,6 @@ export default {
     async creatPart() {
       let payload = {
         part_name: this.partname,
-        description: this.description,
         part_count: this.partcount,
         part_price: this.partprice,
         full_price: this.getFullPartPrice,
@@ -382,6 +426,57 @@ export default {
         .catch((error) => {
           console.log(error);
         });
+    },
+    async editRowData() {
+      let payload = {
+        work_type: this.serviceEditObj.worktype,
+        description: this.serviceEditObj.description,
+        spend_time: this.serviceEditObj.spend_time,
+        work_price: this.serviceEditObj.work_price,
+      };
+      await axios
+        .post(`/customer/serviceedit/${this.serviceEditObj.id}`, payload, {
+          headers: {
+            "Content-type": "application/json",
+          },
+        })
+        .then((res) => {
+          console.log(res);
+          this.reloadpage();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    async editPartRowData() {
+      let payload = {
+        part_name: this.partEditObj.part_name,
+        part_count: this.partEditObj.part_count,
+        part_price: this.partEditObj.part_price,
+        full_price: this.getFullPartEditPrice
+      };
+      await axios
+        .post(`/customer/partedit/${this.partEditObj.id}`, payload, {
+          headers: {
+            "Content-type": "application/json",
+          },
+        })
+        .then((res) => {
+          console.log(res);
+          this.reloadpage();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    showEditBlock(check, id) {
+      this.showEdit = !check;
+      this.serviceEditObj = this.servicecar.find((obj) => obj.id === id);
+    },
+    showEditPartBlock(check, id) {
+      this.showPartEdit = !check;
+      this.partEditObj = this.partscar.find((obj) => obj.id === id);
+      console.log(this.partEditObj)
     },
     showBlock(check) {
       this.show = !check;

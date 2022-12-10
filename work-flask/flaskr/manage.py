@@ -82,7 +82,6 @@ def car_edit(id):
     car = Car.query.get(id)
     if request.method == 'POST':
         json_data = request.get_json()
-        
         carbrand = json_data['car_brand']
         car_number = json_data['car_number']
         vinnumber = json_data['vinnumber']
@@ -228,6 +227,38 @@ def car_order(id):
     if request.method == 'GET':
         order = Order.query.filter_by(id=id).first()
         return jsonify({'order': [order.serialized]})
+
+@bp.route('/serviceedit/<id>', methods=('GET', 'POST'))
+def service_edit(id):
+    service_car = ServiceCar.query.get(id)
+    if request.method == 'POST':
+        json_data = request.get_json()
+        work_type = json_data['work_type']
+        description = json_data['description']
+        spend_time = json_data['spend_time']
+        work_price = json_data['work_price']
+        service_car.work_type = work_type
+        service_car.description = description
+        service_car.spend_time = spend_time
+        service_car.work_price = work_price
+        db.session.commit()
+        return jsonify(status="service_edit")
+
+@bp.route('/partedit/<id>', methods=('GET', 'POST'))
+def part_edit(id):
+    part_car = PartCar.query.get(id)
+    if request.method == 'POST':
+        json_data = request.get_json()
+        part_name = json_data['part_name']
+        part_count = json_data['part_count']
+        part_price = json_data['part_price']
+        full_price = json_data['full_price']
+        part_car.part_name = part_name
+        part_car.spend_time = part_count
+        part_car.work_price = part_price
+        part_car.full_price = full_price
+        db.session.commit()
+        return jsonify(status="part_edit")
 
 # service api
 @bp.route('/service/<id>', methods=('GET', 'POST'))

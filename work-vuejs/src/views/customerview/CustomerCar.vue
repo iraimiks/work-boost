@@ -20,7 +20,7 @@
     </div>
     <footer class="card-footer">
       <a @click="showEditBlock(showEdit)" class="card-footer-item">Labot</a>
-      <a href="#" class="card-footer-item">Klienta lapa</a>
+      <router-link :to="'/dashboard/customers/'+this.$route.params.custid" class="card-footer-item">Klienta lapa</router-link>
     </footer>
   </div>
   <div class="card" v-bind:class="{ 'block-show': !showEdit }">
@@ -82,7 +82,7 @@
   </div>
   <br />
   <div class="field">
-    <button class="button" @click="showBlock(show)">Pasūtījuma forma</button>
+    <button class="button is-info" @click="showBlock(show)">Pasūtījuma forma</button>
   </div>
   <form @submit.prevent="regorder" method="POST">
     <div class="block" v-bind:class="{ 'block-show': !show }">
@@ -99,7 +99,7 @@
         </div>
       </div>
       <div class="field">
-        <button class="button">Iveidot pasūtījumu</button>
+        <button class="button is-warning">Izveidot pasūtījumu</button>
       </div>
     </div>
   </form>
