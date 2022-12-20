@@ -20,7 +20,11 @@
     </div>
     <footer class="card-footer">
       <a @click="showEditBlock(showEdit)" class="card-footer-item">Labot</a>
-      <router-link :to="'/dashboard/customers/'+this.$route.params.custid" class="card-footer-item">Klienta lapa</router-link>
+      <router-link
+        :to="'/dashboard/customers/' + this.$route.params.custid"
+        class="card-footer-item"
+        >Klienta lapa</router-link
+      >
     </footer>
   </div>
   <div class="card" v-bind:class="{ 'block-show': !showEdit }">
@@ -81,8 +85,16 @@
     </div>
   </div>
   <br />
+  <div class="columns is-justify-content-space-between is-flex">
+    <div class="column">
+      <h2 class="title">Auto pasūtījumi</h2>
+    </div>
+  </div>
+  <hr />
   <div class="field">
-    <button class="button is-info" @click="showBlock(show)">Pasūtījuma forma</button>
+    <button class="button is-info" @click="showBlock(show)">
+      Pasūtījuma forma
+    </button>
   </div>
   <form @submit.prevent="regorder" method="POST">
     <div class="block" v-bind:class="{ 'block-show': !show }">
@@ -103,11 +115,6 @@
       </div>
     </div>
   </form>
-  <div class="columns is-justify-content-space-between is-flex">
-    <div class="column">
-      <h2 class="title">Auto pasūtījumi</h2>
-    </div>
-  </div>
 
   <table class="table is-fullwidth">
     <thead>
@@ -128,7 +135,7 @@
         <td>{{ item.work_name }}</td>
         <td>{{ item.create_date }}</td>
         <td>
-          <router-link :to="'/order/' + item.id">Darbs ar auto</router-link>
+          <router-link class="button" :to="'/order/' + item.id">Darbs ar auto</router-link>
         </td>
       </tr>
     </tbody>

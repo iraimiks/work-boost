@@ -17,38 +17,44 @@
   <div class="card" v-bind:class="{ 'block-show': !showEdit }">
     <div class="card-content">
       <div class="content">
-          <form @submit.prevent="editCustomerData" method="POST">
-            <div class="field">
-              <label class="label">Klienta vārds</label>
-              <div class="control">
-                <input
-                  class="input is-success"
-                  type="text"
-                  placeholder="Vārds Uzvārds vai uzņēmuma nosaukums"
-                  v-model="customer.name"
-                />
-              </div>
+        <form @submit.prevent="editCustomerData" method="POST">
+          <div class="field">
+            <label class="label">Klienta vārds</label>
+            <div class="control">
+              <input
+                class="input is-success"
+                type="text"
+                placeholder="Vārds Uzvārds vai uzņēmuma nosaukums"
+                v-model="customer.name"
+              />
             </div>
-            <div class="field">
-              <label class="label">Telefons</label>
-              <div class="control">
-                <input
-                  class="input"
-                  type="text"
-                  placeholder="2*******"
-                  v-model="customer.phone"
-                />
-              </div>
+          </div>
+          <div class="field">
+            <label class="label">Telefons</label>
+            <div class="control">
+              <input
+                class="input"
+                type="text"
+                placeholder="2*******"
+                v-model="customer.phone"
+              />
             </div>
-            <div class="field">
-              <button class="button is-warning">Labot datus</button>
-            </div>
-          </form>
+          </div>
+          <div class="field">
+            <button class="button is-warning">Labot datus</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
 
   <br />
+  <div class="columns is-justify-content-space-between is-flex">
+    <div class="column">
+      <h2 class="title">Klienta auto</h2>
+    </div>
+  </div>
+  <hr>
   <div class="field">
     <button class="button is-info" @click="showBlock(show)">
       Auto registrācijas forma
@@ -109,11 +115,7 @@
       </div>
     </div>
   </form>
-  <div class="columns is-justify-content-space-between is-flex">
-    <div class="column">
-      <h2 class="title">Klienta auto</h2>
-    </div>
-  </div>
+
   <table class="table is-fullwidth">
     <thead>
       <tr>
@@ -135,7 +137,7 @@
         <td>{{ item.odometer }}</td>
         <td>{{ item.create_date }}</td>
         <td>
-          <router-link :to="'/' + item.customer_id + '/car/' + item.id"
+          <router-link class="button" :to="'/' + item.customer_id + '/car/' + item.id"
             >Auto</router-link
           >
         </td>

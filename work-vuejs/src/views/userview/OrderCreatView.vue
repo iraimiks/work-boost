@@ -65,14 +65,14 @@
     </div>
     <div class="column is-6 border-box">
       <h3 class="is-size-4 has-text-left">
-        Reg. nr.: <strong><input v-model="customerRegNumber"/></strong>
+        Reg. nr.: <strong><input v-model="customerRegNumber" /></strong>
       </h3>
     </div>
   </div>
   <div class="columns">
     <div class="column is-6 border-box">
       <h3 class="is-size-4 has-text-left">
-        Addrese: <strong><input v-model="customerAddress"/></strong>
+        Addrese: <strong><input v-model="customerAddress" /></strong>
       </h3>
     </div>
   </div>
@@ -165,32 +165,47 @@
       <h4 class="is-size-4 has-text-left">Kopā: {{ getFullPrice }} euro</h4>
     </div>
     <div class="column">
-      <h4 class="is-size-4 has-text-left">Vārdiem: <input v-model="priceInWords"/></h4>
+      <h4 class="is-size-4 has-text-left">
+        Vārdiem: <input v-model="priceInWords" />
+      </h4>
     </div>
   </div>
   <div class="columns">
     <div class="column">
       <h4 class="is-size-4 has-text-left">
-        Iznsniedza: <input v-model="orderPrepName"/>
+        Iznsniedza: <input v-model="orderPrepName" />
       </h4>
     </div>
     <div class="column">
       <h4 class="is-size-4 has-text-left">
-        Saņēma: <input v-model="orderGetName"/>
+        Saņēma: <input v-model="orderGetName" />
       </h4>
     </div>
   </div>
-  <div class="field">
-    <form @submit.prevent="additionOrderData" method="POST">
-    <button class="button is-warning is-light" @click="addData">
-      Saglabāt
-    </button>
-    </form>
-
-    -->
-    <button class="button is-warning is-light" @click="getPdfTest">
-      Sagatavot pdf
-    </button>
+  <hr />
+  <div class="columns">
+    <div class="column">
+      <h2 class="is-size-2 has-text-left">Darbs noslēgšana</h2>
+    </div>
+  </div>
+  <div class="columns">
+    <div class="column">
+      <form @submit.prevent="additionOrderData" method="POST">
+        <button class="button is-info is-light" @click="addData">
+          Saglabāt
+        </button>
+      </form>
+    </div>
+    <div class="column">
+      <button class="button is-warning is-light" @click="getPdfTest">
+        Sagatavot pdf
+      </button>
+    </div>
+    <div class="column">
+      <button class="button is-danger is-light" @click="finishWork">
+        Darbs Pabeigts
+      </button>
+    </div>
   </div>
 </template>
 <script>
@@ -335,6 +350,23 @@ export default {
           console.log(error);
         });
     },
+    async finishWork() {
+      let payload = {
+        order_status: "Darbs Beigts"
+      }
+      await axios
+        .post(`/customer/finishwork/${this.$route.params.id}`, payload, {
+          headers: {
+            "Content-type": "application/json",
+          },
+        })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   },
 };
 </script>

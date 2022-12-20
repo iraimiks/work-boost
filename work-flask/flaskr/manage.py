@@ -145,6 +145,16 @@ def status_work():
         print(orders)
         return  jsonify({'orders':[order.serialized for order in orders]})
 
+@bp.route('/finishwork/<id>', methods=('GET', 'POST'))
+def finish_order(id):
+    if request.method == 'POST':
+        order = Order.query.get(id)
+        json_data = request.get_json()
+        work_done = json_data['order_status']
+        order.status = work_done
+        db.session.commit()
+        return jsonify(status="finish_work")
+
 @bp.route('/order', methods=('GET', 'POST'))
 def order():
     if request.method == 'POST':
@@ -254,8 +264,8 @@ def part_edit(id):
         part_price = json_data['part_price']
         full_price = json_data['full_price']
         part_car.part_name = part_name
-        part_car.spend_time = part_count
-        part_car.work_price = part_price
+        part_car.part_count = part_count
+        part_car.part_price = part_price
         part_car.full_price = full_price
         db.session.commit()
         return jsonify(status="part_edit")

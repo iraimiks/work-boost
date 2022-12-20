@@ -22,6 +22,11 @@
     </div>
   </div>
   <br />
+  <div class="columns is-justify-content-space-between is-flex">
+    <div class="column">
+      <h2 class="title">Darbs ar auto</h2>
+    </div>
+  </div>
   <div class="columns">
     <div class="column">
       <div class="field">
@@ -31,248 +36,381 @@
       </div>
     </div>
   </div>
-  <form @submit.prevent="createService" method="POST">
-    <div class="block" v-bind:class="{ 'block-show': !show }">
-      <div class="field">
-        <label class="label">Darba veids</label>
-        <div class="control">
-          <div class="select">
-            <select v-model="worktype">
-              <option>Diagnostika</option>
-              <option>Remonts</option>
-              <option>Detaļas maiņa</option>
-            </select>
-          </div>
+  <form
+    class="box block"
+    @submit.prevent="createService"
+    method="POST"
+    v-bind:class="{ 'block-show': !show }"
+  >
+    <div class="field">
+      <label class="label">Darba veids</label>
+      <div class="control">
+        <div class="select">
+          <select v-model="worktype">
+            <option>Diagnostika</option>
+            <option>Remonts</option>
+          </select>
         </div>
       </div>
-      <div class="field">
-        <label class="label">Apraksts</label>
-        <div class="control">
-          <input class="input is-success" type="text" v-model="description" />
+    </div>
+    <div class="field">
+      <label class="label">Apraksts</label>
+      <div class="control">
+        <input class="input is-success" type="text" v-model="description" />
+      </div>
+    </div>
+    <div class="field">
+      <label class="label">Iztērētais laiks</label>
+      <div class="control">
+        <input
+          class="input is-success"
+          type="text"
+          placeholder="Darbas"
+          v-model="spendtime"
+        />
+      </div>
+    </div>
+    <div class="field is-horizontal">
+      <div class="field-label is-normal">
+        <label class="label">Stundas likme euro</label>
+      </div>
+      <div class="field-body">
+        <div class="field has-addons">
+          <p class="control">
+            <input
+              class="input"
+              type="number"
+              min="0"
+              max="100"
+              v-model="hourRate"
+              placeholder="0"
+            />
+          </p>
         </div>
       </div>
-      <div class="field">
-        <label class="label">Iztērētais laiks</label>
-        <div class="control">
-          <input
-            class="input is-success"
-            type="text"
-            placeholder="Darbas"
-            v-model="spendtime"
-          />
+    </div>
+    <div class="field is-horizontal">
+      <div class="field-label is-normal">
+        <label class="label">Grūtības pakāpe %</label>
+      </div>
+      <div class="field-body">
+        <div class="field has-addons">
+          <p class="control">
+            <input
+              class="input"
+              type="number"
+              min="0"
+              max="100"
+              v-model="rateValue"
+              placeholder="0"
+            />
+          </p>
         </div>
       </div>
-      <div class="field is-horizontal">
-        <div class="field-label is-normal">
-          <label class="label">Stundas likme euro</label>
-        </div>
-        <div class="field-body">
-          <div class="field has-addons">
-            <p class="control">
-              <input
-                class="input"
-                type="number"
-                min="0"
-                max="100"
-                v-model="hourRate"
-                placeholder="0"
-              />
-            </p>
-          </div>
+    </div>
+    <div class="field is-horizontal">
+      <div class="field-label is-normal">
+        <label class="label">Darba cena</label>
+      </div>
+      <div class="field-body">
+        <div class="field has-addons">
+          <p class="control">
+            {{ getWorkPrice }}
+          </p>
         </div>
       </div>
-      <div class="field is-horizontal">
-        <div class="field-label is-normal">
-          <label class="label">Grūtības pakāpe %</label>
-        </div>
-        <div class="field-body">
-          <div class="field has-addons">
-            <p class="control">
-              <input
-                class="input"
-                type="number"
-                min="0"
-                max="100"
-                v-model="rateValue"
-                placeholder="0"
-              />
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="field is-horizontal">
-        <div class="field-label is-normal">
-          <label class="label">Darba cena</label>
-        </div>
-        <div class="field-body">
-          <div class="field has-addons">
-            <p class="control">
-              {{ getWorkPrice }}
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="field">
-        <button class="button is-warning is-light">Registrēt darbu</button>
-      </div>
+    </div>
+    <div class="field">
+      <button class="button is-warning is-light">Registrēt darbu</button>
     </div>
   </form>
-  <div>
-    <div class="columns is-justify-content-space-between is-flex">
-      <div class="column">
-        <h2 class="title">Darbs ar auto</h2>
-      </div>
-    </div>
-    <form @submit.prevent="editRowData" method="POST">
-      <table class="table is-fullwidth">
-        <tbody>
-          <tr v-bind:class="{ 'block-show': !showEdit }">
-            <td>{{ serviceEditObj.id }}</td>
-            <td><input v-model="serviceEditObj.work_type" /></td>
-            <td><input v-model="serviceEditObj.description" /></td>
-            <td><input v-model="serviceEditObj.spend_time" /></td>
-            <td><input v-model="serviceEditObj.work_price" /></td>
-            <td>{{ serviceEditObj.create_date }}</td>
-            <td>
-              <button class="button is-warning">Apstiprināt</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </form>
-    <table class="table is-fullwidth">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Darba veids</th>
-          <th>Iztērētais laiks</th>
-          <th>Darba laiks</th>
-          <th>Darba samaksa</th>
-          <th>Izveides datums</th>
-          <th>Darbības</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="item in servicecar" v-bind:key="item">
-          <td>{{ item.id }}</td>
-          <td>{{ item.work_type }}</td>
-          <td>{{ item.description }}</td>
-          <td>{{ item.spend_time }}</td>
-          <td>{{ item.work_price }}</td>
-          <td>{{ item.create_date }}</td>
-          <td>
-            <a @click="showEditBlock(showEdit, item.id)">Labot</a>
-          </td>
-        </tr>
-      </tbody>
-    </table>
 
+  <form
+    @submit.prevent="editRowData"
+    method="POST"
+    class="box"
+    v-bind:class="{ 'block-show': !showEdit }"
+  >
     <div class="field">
-      <button class="button is-info" @click="showPartBlock(partForm)">
-        Detaļu registrācija
-      </button>
+      <label class="label">ID:</label>
+      <div class="control">
+        <p>{{ serviceEditObj.id }}</p>
+      </div>
     </div>
-    <form @submit.prevent="creatPart" method="POST">
-      <div class="block" v-bind:class="{ 'block-show': !partForm }">
-        <div class="field">
-          <label class="label">Detaļas nosaukums</label>
-          <div class="control">
-            <input class="input is-success" type="text" v-model="partname" />
-          </div>
+    <div class="field">
+      <label class="label">Darba veids</label>
+      <div class="control">
+        <div class="select">
+          <select v-model="serviceEditObj.work_type">
+            <option>Diagnostika</option>
+            <option>Remonts</option>
+          </select>
         </div>
+      </div>
+    </div>
+    <div class="field">
+      <label class="label">Apraksts</label>
+      <div class="control">
+        <input
+          class="input is-success"
+          type="text"
+          v-model="serviceEditObj.description"
+        />
+      </div>
+    </div>
+
+    <div class="field is-horizontal">
+      <div class="field-label is-normal">
+        <label class="label">Darba laiks:</label>
+      </div>
+      <div class="field-body">
         <div class="field">
-          <label class="label">Daudzums</label>
-          <div class="control">
+          <p class="control">
+            <input class="input" v-model="serviceEditObj.spend_time" />
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="field is-horizontal">
+      <div class="field-label is-normal">
+        <label class="label">Stundas likme euro:</label>
+      </div>
+      <div class="field-body">
+        <div class="field">
+          <p class="control">
             <input
-              class="input is-success"
-              type="text"
+              class="input"
+              type="number"
+              min="0"
+              max="100"
+              v-model="hourRateEdit"
               placeholder="0"
-              v-model="partcount"
             />
-          </div>
+          </p>
         </div>
+      </div>
+    </div>
+    <div class="field is-horizontal">
+      <div class="field-label is-normal">
+        <label class="label">Grūtības pakāpe %:</label>
+      </div>
+      <div class="field-body">
         <div class="field">
-          <label class="label">Detaļas cena</label>
-          <div class="control">
+          <p class="control">
             <input
-              class="input is-success"
-              type="text"
-              placeholder="0.00"
-              v-model="partprice"
+              class="input"
+              type="number"
+              min="0"
+              max="100"
+              v-model="rateValueEdit"
+              placeholder="0"
             />
-          </div>
+          </p>
         </div>
-        <div class="field is-horizontal">
-          <div class="field-label is-normal">
-            <label class="label">Cena kopā:</label>
-          </div>
-          <div class="field-body">
-            <div class="field has-addons">
-              <p class="control">{{ getFullPartPrice }} euro</p>
-            </div>
-          </div>
-        </div>
-        <div class="field">
-          <button class="button is-warning is-light">Registrēt detaļu</button>
-        </div>
-      </div>
-    </form>
-    <div class="columns is-justify-content-space-between is-flex">
-      <div class="column">
-        <h2 class="title">Auto detaļas</h2>
       </div>
     </div>
-    <form @submit.prevent="editPartRowData" method="POST">
-      <table class="table is-fullwidth">
-        <tbody>
-          <tr v-bind:class="{ 'block-show': !showPartEdit }">
-            <td>{{ partEditObj.id }}</td>
-            <td><input v-model="partEditObj.part_name" /></td>
-            <td><input v-model="partEditObj.part_count" /></td>
-            <td><input v-model="partEditObj.part_price" /></td>
-            <td><input v-model="this.getFullPartEditPrice" /></td>
-            <td>{{ partEditObj.create_date }}</td>
-            <td>
-              <button class="button is-warning">Apstiprināt</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </form>
-    <table class="table is-fullwidth">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Detaļas nosaukums</th>
-          <th>Detaļas skaits</th>
-          <th>Vienas vienības cena</th>
-          <th>Pilnā cena</th>
-          <th>Izveides datums</th>
-          <th>Darbības</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="item in partscar" v-bind:key="item">
-          <td>{{ item.id }}</td>
-          <td>{{ item.part_name }}</td>
-          <td>{{ item.part_count }}</td>
-          <td>{{ item.part_price }}</td>
-          <td>{{ item.full_price }}</td>
-          <td>{{ item.create_date }}</td>
-          <td>
-            <a @click="showEditPartBlock(showPartEdit, item.id)">Labot</a>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="field is-horizontal">
+      <div class="field-label is-normal">
+        <label class="label">Darba cena:</label>
+      </div>
+      <div class="field-body">
+        <div class="field">
+          <p class="control">
+            {{ getFullServiceEditPrice }} euro
+          </p>
+        </div>
+      </div>
+    </div>
     <div class="field">
-      <h2 class="title">Izviedot pavadzīmi</h2>
-      <form @submit.prevent="createOrder" method="POST">
-        <div class="field">
-          <button class="button is-warning is-light">Veidot</button>
-        </div>
-      </form>
+      <button class="button is-warning">Apstiprināt</button>
     </div>
+  </form>
+  <table class="table is-fullwidth">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Darba veids</th>
+        <th>Apraksts</th>
+        <th>Darba laiks</th>
+        <th>Darba samaksa</th>
+        <th>Izveides datums</th>
+        <th>Darbības</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="item in servicecar" v-bind:key="item">
+        <td>{{ item.id }}</td>
+        <td>{{ item.work_type }}</td>
+        <td>{{ item.description }}</td>
+        <td>{{ item.spend_time }}</td>
+        <td>{{ item.work_price }}</td>
+        <td>{{ item.create_date }}</td>
+        <td>
+          <a @click="showEditBlock(showEdit, item.id)">Labot</a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <hr />
+  <div class="columns is-justify-content-space-between is-flex">
+    <div class="column">
+      <h2 class="title">Auto detaļas</h2>
+    </div>
+  </div>
+  <div class="field">
+    <button class="button is-info" @click="showPartBlock(partForm)">
+      Detaļu registrācija
+    </button>
+  </div>
+  <form
+    @submit.prevent="creatPart"
+    method="POST"
+    class="box block"
+    v-bind:class="{ 'block-show': !partForm }"
+  >
+    <div class="field">
+      <label class="label">Detaļas nosaukums</label>
+      <div class="control">
+        <input class="input is-success" type="text" v-model="partname" />
+      </div>
+    </div>
+    <div class="field">
+      <label class="label">Daudzums</label>
+      <div class="control">
+        <input
+          class="input is-success"
+          type="text"
+          placeholder="0"
+          v-model="partcount"
+        />
+      </div>
+    </div>
+    <div class="field">
+      <label class="label">Detaļas cena</label>
+      <div class="control">
+        <input
+          class="input is-success"
+          type="text"
+          placeholder="0.00"
+          v-model="partprice"
+        />
+      </div>
+    </div>
+    <div class="field is-horizontal">
+      <div class="field-label is-normal">
+        <label class="label">Cena kopā:</label>
+      </div>
+      <div class="field-body">
+        <div class="field has-addons">
+          <p class="control">{{ getFullPartPrice }} euro</p>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <button class="button is-warning is-light">Registrēt detaļu</button>
+    </div>
+  </form>
+  <form
+    @submit.prevent="editPartRowData"
+    method="POST"
+    class="box"
+    v-bind:class="{ 'block-show': !showPartEdit }"
+  >
+    <div class="field">
+      <label class="label">ID:</label>
+      <div class="control">
+        <p>{{ partEditObj.id }}</p>
+      </div>
+    </div>
+    <div class="field">
+      <label class="label">Detaļas nosaukums</label>
+      <div class="control">
+        <input
+          class="input is-success"
+          type="text"
+          v-model="partEditObj.part_name"
+        />
+      </div>
+    </div>
+    <div class="field">
+      <label class="label">Daudzums</label>
+      <div class="control">
+        <input
+          class="input is-success"
+          type="text"
+          placeholder="0"
+          v-model="partEditObj.part_count"
+        />
+      </div>
+    </div>
+    <div class="field">
+      <label class="label">Detaļas cena</label>
+      <div class="control">
+        <input
+          class="input is-success"
+          type="text"
+          placeholder="0.00"
+          v-model="partEditObj.part_price"
+        />
+      </div>
+    </div>
+    <div class="field is-horizontal">
+      <div class="field-label is-normal">
+        <label class="label">Cena kopā:</label>
+      </div>
+      <div class="field-body">
+        <div class="field has-addons">
+          <p class="control">{{ this.getFullPartEditPrice }} euro</p>
+        </div>
+      </div>
+    </div>
+    <div class="field is-horizontal">
+      <div class="field-label is-normal">
+        <label class="label">Izveides datums</label>
+      </div>
+      <div class="field-body">
+        <div class="field has-addons">
+          <p class="control">{{ partEditObj.create_date }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <button class="button is-warning">Apstiprināt</button>
+    </div>
+  </form>
+  <table class="table is-fullwidth">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Detaļas nosaukums</th>
+        <th>Detaļas skaits</th>
+        <th>Vienas vienības cena</th>
+        <th>Pilnā cena</th>
+        <th>Izveides datums</th>
+        <th>Darbības</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="item in partscar" v-bind:key="item">
+        <td>{{ item.id }}</td>
+        <td>{{ item.part_name }}</td>
+        <td>{{ item.part_count }}</td>
+        <td>{{ item.part_price }}</td>
+        <td>{{ item.full_price }}</td>
+        <td>{{ item.create_date }}</td>
+        <td>
+          <a @click="showEditPartBlock(showPartEdit, item.id)">Labot</a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="field">
+    <h2 class="title">Izviedot pavadzīmi</h2>
+    <form @submit.prevent="createOrder" method="POST">
+      <div class="field">
+        <button class="button is-warning is-light">Veidot</button>
+      </div>
+    </form>
   </div>
 </template>
 <script>
@@ -298,6 +436,8 @@ export default {
       rateValue: 0,
       showEdit: false,
       showPartEdit: false,
+      hourRateEdit: 0,
+      rateValueEdit: 0,
     };
   },
   computed: {
@@ -319,6 +459,18 @@ export default {
       });
       return formatter.format(this.partcount * this.partprice);
     },
+    getFullServiceEditPrice() {
+      const formatter = new Intl.NumberFormat("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+        style: "decimal",
+        useGrouping: false,
+      });
+      return formatter.format(
+        this.serviceEditObj.spend_time * this.hourRateEdit +
+          (this.hourRateEdit * this.rateValueEdit) / 100
+      );
+    },
     getFullPartEditPrice() {
       const formatter = new Intl.NumberFormat("en-US", {
         minimumFractionDigits: 2,
@@ -326,7 +478,9 @@ export default {
         style: "decimal",
         useGrouping: false,
       });
-      return formatter.format(this.partEditObj.part_count * this.partEditObj.part_price);
+      return formatter.format(
+        this.partEditObj.part_count * this.partEditObj.part_price
+      );
     },
   },
   mounted() {
@@ -429,10 +583,10 @@ export default {
     },
     async editRowData() {
       let payload = {
-        work_type: this.serviceEditObj.worktype,
+        work_type: this.serviceEditObj.work_type,
         description: this.serviceEditObj.description,
         spend_time: this.serviceEditObj.spend_time,
-        work_price: this.serviceEditObj.work_price,
+        work_price: this.getFullServiceEditPrice,
       };
       await axios
         .post(`/customer/serviceedit/${this.serviceEditObj.id}`, payload, {
@@ -453,7 +607,7 @@ export default {
         part_name: this.partEditObj.part_name,
         part_count: this.partEditObj.part_count,
         part_price: this.partEditObj.part_price,
-        full_price: this.getFullPartEditPrice
+        full_price: this.getFullPartEditPrice,
       };
       await axios
         .post(`/customer/partedit/${this.partEditObj.id}`, payload, {
@@ -476,7 +630,7 @@ export default {
     showEditPartBlock(check, id) {
       this.showPartEdit = !check;
       this.partEditObj = this.partscar.find((obj) => obj.id === id);
-      console.log(this.partEditObj)
+      console.log(this.partEditObj);
     },
     showBlock(check) {
       this.show = !check;
