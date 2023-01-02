@@ -190,13 +190,6 @@
   </div>
   <div class="columns">
     <div class="column">
-      <form @submit.prevent="additionOrderData" method="POST">
-        <button class="button is-info is-light" @click="addData">
-          Saglabāt
-        </button>
-      </form>
-    </div>
-    <div class="column">
       <button class="button is-warning is-light" @click="getPdfTest">
         Sagatavot pdf
       </button>
@@ -274,33 +267,6 @@ export default {
       this.date = new Date(date);
       return this.date.toLocaleDateString("lv-LV");
     },
-    async additionOrderData() {
-      let payload = {
-        full_service_price: this.getFullServicePrice,
-        full_part_price: this.getFullPartPrice,
-        customer_reg_number: this.customerRegNumber,
-        customer_address: this.customerAddress,
-        pay_option: this.payOption,
-        full_price: this.getFullPrice,
-        order_prep_name: this.orderPrepName,
-        order_get_name: this.orderGetName,
-        price_in_words: this.priceInWords,
-        order_id: this.$route.params.id,
-      };
-
-      await axios
-        .post(`/customer/addorderdata`, payload, {
-          headers: {
-            "Content-type": "application/json",
-          },
-        })
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    },
     async getOrderData() {
       await axios
         .get(`/customer/orderdata/${this.$route.params.id}`)
@@ -333,6 +299,31 @@ export default {
         });
     },
     async getPdfTest() {
+      let payload = {
+        full_service_price: this.getFullServicePrice,
+        full_part_price: this.getFullPartPrice,
+        customer_reg_number: this.customerRegNumber,
+        customer_address: this.customerAddress,
+        pay_option: this.payOption,
+        full_price: this.getFullPrice,
+        order_prep_name: this.orderPrepName,
+        order_get_name: this.orderGetName,
+        price_in_words: this.priceInWords,
+        order_id: this.$route.params.id,
+      };
+
+      await axios
+        .post(`/customer/addorderdata`, payload, {
+          headers: {
+            "Content-type": "application/json",
+          },
+        })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
       await axios
         .get(`/customer/pdforder/${this.$route.params.id}`, {
           responseType: "blob",
@@ -352,8 +343,8 @@ export default {
     },
     async finishWork() {
       let payload = {
-        order_status: "Darbs Beigts"
-      }
+        order_status: "Darbs Beigts",
+      };
       await axios
         .post(`/customer/finishwork/${this.$route.params.id}`, payload, {
           headers: {
@@ -366,7 +357,7 @@ export default {
         .catch((error) => {
           console.log(error);
         });
-    }
+    },
   },
 };
 </script>

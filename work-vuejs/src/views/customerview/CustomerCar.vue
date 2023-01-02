@@ -22,8 +22,7 @@
       <a @click="showEditBlock(showEdit)" class="card-footer-item">Labot</a>
       <router-link
         :to="'/dashboard/customers/' + this.$route.params.custid"
-        class="card-footer-item"
-        >Klienta lapa</router-link
+        class="card-footer-item ">Klienta lapa</router-link
       >
     </footer>
   </div>
@@ -131,7 +130,12 @@
       <tr v-for="item in carorders" v-bind:key="item">
         <td>{{ item.id }}</td>
         <td>{{ item.name }}</td>
-        <td>{{ item.status }}</td>
+        <td><span v-if="item.status === 'Darbs Sākts'" style="color: green">{{
+          item.status
+        }}</span>
+        <span v-else="item.status === 'Darbs Beigts'" style="color: red">{{
+          item.status
+        }}</span></td>
         <td>{{ item.work_name }}</td>
         <td>{{ item.create_date }}</td>
         <td>

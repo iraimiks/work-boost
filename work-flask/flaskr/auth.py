@@ -7,7 +7,7 @@ from flask import (
 from flaskr import db
 
 from flaskr.users.user import User
-from sqlalchemy import or_
+from sqlalchemy import or_, desc
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -65,6 +65,7 @@ def worker_reg():
             new_worker = User(role, name, username, password, phone, create_date=datetime.datetime.now())
             db.session.add(new_worker)
             db.session.commit()
-            return jsonify(status="register")
+            worker = User.query.order_by(desc("id")).first()
+            return jsonify(status="register", worker=worker.id)
         else:
             return jsonify(status="exist_worker", worker=worker.id)

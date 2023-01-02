@@ -1,6 +1,6 @@
 <template>
   <h2 class="title">Registrēt darbinieku</h2>
-  <form @submit.prevent="regWorker" method="POST">
+  <form @submit.prevent="regWorker" method="POST" autocomplete="off">
     <div class="field">
       <label class="label">Vārds</label>
       <div class="control">
@@ -58,8 +58,8 @@
         <router-link
           class="button is-primary"
           v-bind:class="{ 'block-show': showLinkToWorker }"
-          :to="'/dashboard/customers/' + customerid"
-          >Klienta lapa</router-link
+          :to="'/user/' + workerid"
+          >Darbinieka lapa</router-link
         >
       </p>
     </div>
@@ -106,6 +106,8 @@ export default {
             this.usernameProblem = false;
             this.showLinkToWorker = false;
             this.workerid = res.data.worker;
+          } else {
+            window.location.href = "/user/" + res.data.worker;
           }
         })
         .catch((error) => {

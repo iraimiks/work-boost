@@ -246,7 +246,7 @@
         <td>{{ item.work_price }}</td>
         <td>{{ item.create_date }}</td>
         <td>
-          <a @click="showEditBlock(showEdit, item.id)">Labot</a>
+          <a @click="showEditBlock(showEdit, item.id)" class="button is-warning">Labot</a>
         </td>
       </tr>
     </tbody>
@@ -399,7 +399,7 @@
         <td>{{ item.full_price }}</td>
         <td>{{ item.create_date }}</td>
         <td>
-          <a @click="showEditPartBlock(showPartEdit, item.id)">Labot</a>
+          <a @click="showEditPartBlock(showPartEdit, item.id)"  class="button is-warning">Labot</a>
         </td>
       </tr>
     </tbody>

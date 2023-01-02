@@ -1,18 +1,42 @@
 <template>
   <div>
     <h2 class="title">Reģistrēti klienti</h2>
+    <hr>
     <div class="field is-horizontal">
       <div class="field-label is-normal">
-        <label class="label">Meklēt</label>
+        <label class="label">Meklēt pēc vārda</label>
       </div>
       <div class="field-body">
         <div class="field">
           <p class="control">
-            <input class="input" v-model="searchWord" type="text" placeholder="Meklēt vārdu" />
+            <input
+              class="input"
+              v-model="searchWord"
+              type="text"
+              placeholder="Meklēt vārdu"
+            />
           </p>
         </div>
       </div>
     </div>
+    <div class="field is-horizontal">
+      <div class="field-label is-normal">
+        <label class="label">Meklēt pēc tel</label>
+      </div>
+      <div class="field-body">
+        <div class="field">
+          <p class="control">
+            <input
+              class="input"
+              v-model="searchTel"
+              type="text"
+              placeholder="Meklēt tel"
+            />
+          </p>
+        </div>
+      </div>
+    </div>
+
     <table class="table is-fullwidth">
       <thead>
         <tr>
@@ -23,14 +47,27 @@
           <th>Darbības</th>
         </tr>
       </thead>
-      <tbody v-if="searchWord != ''">
+      <tbody v-if="searchType === 'name'">
         <tr v-for="item in filterCustomer" v-bind:key="item">
           <td>{{ item.id }}</td>
           <td>{{ item.name }}</td>
           <td>{{ item.phone }}</td>
           <td>{{ item.create_date }}</td>
           <td>
-            <router-link :to="'/dashboard/customers/' + item.id"
+            <router-link :to="'/dashboard/customers/' + item.id" class="button"
+              >Klienta lapa</router-link
+            >
+          </td>
+        </tr>
+      </tbody>
+      <tbody v-else-if="searchTel != ''">
+        <tr v-for="item in filterTel" v-bind:key="item">
+          <td>{{ item.id }}</td>
+          <td>{{ item.name }}</td>
+          <td>{{ item.phone }}</td>
+          <td>{{ item.create_date }}</td>
+          <td>
+            <router-link :to="'/dashboard/customers/' + item.id" class="button"
               >Klienta lapa</router-link
             >
           </td>
@@ -43,14 +80,19 @@
           <td>{{ item.phone }}</td>
           <td>{{ item.create_date }}</td>
           <td>
-            <router-link :to="'/dashboard/customers/' + item.id"
+            <router-link :to="'/dashboard/customers/' + item.id" class="button"
               >Klienta lapa</router-link
             >
           </td>
         </tr>
       </tbody>
     </table>
-    <nav class="pagination" role="navigation" aria-label="pagination" v-if="searchWord === ''">
+    <nav
+      class="pagination"
+      role="navigation"
+      aria-label="pagination"
+      v-bind:class="{ 'block-show': searchWord != '' || searchTel != '' }"
+    >
       <a
         class="pagination-previous"
         v-bind:class="{ 'is-disabled': stopLeft }"
@@ -101,7 +143,10 @@ export default {
       result: [],
       showFirstNumber: false,
       showLastNumber: true,
+      searchtype: "",
+      search: "",
       searchWord: "",
+      searchTel: "",
       itemsPerList: 5,
     };
   },
@@ -110,10 +155,17 @@ export default {
   },
   computed: {
     filterCustomer() {
-      return this.customers.filter(customer => {
-        return customer.name.toLowerCase().indexOf(this.searchWord.toLowerCase()) != -1;
+      return this.customers.filter((customer) => {
+        return (
+          customer.name.toLowerCase().indexOf(this.search.toLowerCase()) != -1
+        );
       });
-    }
+    },
+    filterTel() {
+      return this.customers.filter((customer) => {
+        return customer.phone.indexOf(this.searchTel) != -1;
+      });
+    },
   },
   methods: {
     async getCustomers() {
@@ -135,7 +187,10 @@ export default {
       } else {
         this.pageCountShow = Math.round(lens / this.itemsPerList);
       }
-      this.items = this.customers.slice((page - 1) * this.itemsPerList, page * this.itemsPerList);
+      this.items = this.customers.slice(
+        (page - 1) * this.itemsPerList,
+        page * this.itemsPerList
+      );
     },
     currentPageEvent(num) {
       this.generatePageRange(num, this.pageCountShow);
