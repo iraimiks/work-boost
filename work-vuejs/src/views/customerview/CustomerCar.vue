@@ -22,7 +22,8 @@
       <a @click="showEditBlock(showEdit)" class="card-footer-item">Labot</a>
       <router-link
         :to="'/dashboard/customers/' + this.$route.params.custid"
-        class="card-footer-item ">Klienta lapa</router-link
+        class="card-footer-item"
+        >Klienta lapa</router-link
       >
     </footer>
   </div>
@@ -114,7 +115,7 @@
       </div>
     </div>
   </form>
-
+  <hr />
   <table class="table is-fullwidth">
     <thead>
       <tr>
@@ -130,16 +131,31 @@
       <tr v-for="item in carorders" v-bind:key="item">
         <td>{{ item.id }}</td>
         <td>{{ item.name }}</td>
-        <td><span v-if="item.status === 'Darbs Sākts'" style="color: green">{{
-          item.status
-        }}</span>
-        <span v-else="item.status === 'Darbs Beigts'" style="color: red">{{
-          item.status
-        }}</span></td>
-        <td>{{ item.work_name }}</td>
-        <td>{{ item.create_date }}</td>
         <td>
-          <router-link class="button" :to="'/order/' + item.id">Darbs ar auto</router-link>
+          <span v-if="item.status === 'Darbs Sākts'" style="color: green">{{
+            item.status
+          }}</span>
+          <span v-else="item.status === 'Darbs Beigts'" style="color: red">{{
+            item.status
+          }}</span>
+        </td>
+        <td>{{ item.work_name }}</td>
+        <td>{{ convertDate(item.create_date) }}</td>
+        <td>
+          <div class="columns">
+            <div class="column">
+              <router-link class="button" :to="'/order/' + item.id"
+                >Darbs ar auto</router-link
+              >
+            </div>
+            <div class="column">
+              <form @submit.prevent="delCarOrder(item)" method="POST">
+                <div class="field">
+                  <button class="button is-danger">Dzēst pasūtījumu</button>
+                </div>
+              </form>
+            </div>
+          </div>
         </td>
       </tr>
     </tbody>
@@ -180,6 +196,28 @@ export default {
         .get(`/customer/workers`)
         .then((res) => {
           this.workers = res.data.workers;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    async delCarOrder(item) {
+      let payload = {
+        order_id: item.id,
+      };
+      await axios
+        .post(`/customer/orderdel`, payload, {
+          headers: {
+            "Content-type": "application/json",
+          },
+        })
+        .then((res) => {
+          if (res.data.status === "order_delete") {
+            this.reloadpage();
+          } else {
+            //need thing about how to improve error messaging
+            console.log("somthing wrong");
+          }
         })
         .catch((error) => {
           console.log(error);

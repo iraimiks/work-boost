@@ -5,9 +5,12 @@
         Klienta vārds: <strong>{{ customer.name }}</strong>
       </p>
       <p class="subtitle">
-        Izveides datums: {{ convertDate(customer.create_date) }}
+        Izveides datums:
+        <strong>{{ convertDate(customer.create_date) }}</strong>
       </p>
-      <p class="subtitle">Telefons: {{ customer.phone }}</p>
+      <p class="subtitle">
+        Telefons: <strong>{{ customer.phone }}</strong>
+      </p>
     </div>
     <footer class="card-footer">
       <a @click="showEditBlock(showEdit)" class="card-footer-item">Labot</a>
@@ -47,21 +50,15 @@
       </div>
     </div>
   </div>
-
-  <br />
-  <div class="columns is-justify-content-space-between is-flex">
-    <div class="column">
-      <h2 class="title">Klienta auto</h2>
-    </div>
-  </div>
-  <hr>
+  <hr />
   <div class="field">
     <button class="button is-info" @click="showBlock(show)">
       Auto registrācijas forma
     </button>
   </div>
+  <hr />
   <br />
-  <form @submit.prevent="regcustcar" method="POST">
+  <form @submit.prevent="regCustomerCar" method="POST">
     <div class="block" v-bind:class="{ 'block-show': !show }">
       <div class="field">
         <label class="label">Modelis</label>
@@ -115,7 +112,12 @@
       </div>
     </div>
   </form>
-
+  <br />
+  <div class="columns is-justify-content-space-between is-flex">
+    <div class="column">
+      <h2 class="title">Klienta auto</h2>
+    </div>
+  </div>
   <table class="table is-fullwidth">
     <thead>
       <tr>
@@ -133,13 +135,28 @@
         <td>{{ item.id }}</td>
         <td>{{ item.brand }}</td>
         <td>{{ item.number }}</td>
-        <td>{{ item.vinnumber }}</td>
-        <td>{{ item.odometer }}</td>
-        <td>{{ item.create_date }}</td>
+        <td v-if="item.vinnumber === ''">- - -</td>
+        <td v-else>{{ item.vinnumber }}</td>
+        <td v-if="item.odometer === ''">- - -</td>
+        <td v-else>{{ item.odometer }}</td>
+        <td>{{ convertDate(item.create_date) }}</td>
         <td>
-          <router-link class="button" :to="'/' + item.customer_id + '/car/' + item.id"
-            >Auto</router-link
-          >
+          <div class="columns">
+            <div class="column">
+              <router-link
+                class="button"
+                :to="'/' + item.customer_id + '/car/' + item.id"
+                >Izveidot pasūtījumu</router-link
+              >
+            </div>
+            <div class="column">
+              <form @submit.prevent="delCustomerCar(item)" method="POST">
+                <div class="field">
+                  <button class="button is-danger">Dzēst Auto</button>
+                </div>
+              </form>
+            </div>
+          </div>
         </td>
       </tr>
     </tbody>
@@ -207,7 +224,29 @@ export default {
           console.log(error);
         });
     },
-    async regcustcar() {
+    async delCustomerCar(item) {
+      let payload = {
+        car_id: item.id
+      }
+      await axios
+        .post(`/customer/cardel`, payload, {
+          headers: {
+            "Content-type": "application/json",
+          },
+        })
+        .then((res) => {
+          if(res.data.status === "car_delete") {
+            this.reloadpage();
+          } else {
+            //need thing about how to improve error messaging
+            console.log("somthing wrong")
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    async regCustomerCar() {
       let payload = {
         carbrand: this.carbrand,
         carnumber: this.carnumber,

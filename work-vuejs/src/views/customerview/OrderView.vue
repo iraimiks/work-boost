@@ -17,9 +17,22 @@
         Pasūtījuma registrācijas kods: <strong>{{ order.name }}</strong>
       </p>
       <p class="subtitle">
+        Auto: <strong>{{ car.brand }}</strong>
+      </p>
+      <p class="subtitle">
+        Autom reg nr. : <strong>{{ car.number }}</strong>
+      </p>
+      <p class="subtitle">
         Darba uzsākšana: <strong>{{ convertDate(order.create_date) }}</strong>
       </p>
     </div>
+    <footer class="card-footer">
+      <router-link
+        :to="'/' + this.order.cust_id + '/car/' + this.order.car_id"
+        class="card-footer-item"
+        >Auto pasūtījumu lapa</router-link
+      >
+    </footer>
   </div>
   <br />
   <div class="columns is-justify-content-space-between is-flex">
@@ -215,9 +228,7 @@
       </div>
       <div class="field-body">
         <div class="field">
-          <p class="control">
-            {{ getFullServiceEditPrice }} euro
-          </p>
+          <p class="control">{{ getFullServiceEditPrice }} euro</p>
         </div>
       </div>
     </div>
@@ -244,9 +255,24 @@
         <td>{{ item.description }}</td>
         <td>{{ item.spend_time }}</td>
         <td>{{ item.work_price }}</td>
-        <td>{{ item.create_date }}</td>
+        <td>{{ convertDate(item.create_date) }}</td>
         <td>
-          <a @click="showEditBlock(showEdit, item.id)" class="button is-warning">Labot</a>
+          <div class="columns">
+            <div class="column">
+              <a
+                @click="showEditBlock(showEdit, item.id)"
+                class="button is-warning"
+                >Labot</a
+              >
+            </div>
+            <div class="column">
+              <form @submit.prevent="delServiceCar(item)" method="POST">
+                <div class="field">
+                  <button class="button is-danger">Dzēst darbu</button>
+                </div>
+              </form>
+            </div>
+          </div>
         </td>
       </tr>
     </tbody>
@@ -397,9 +423,24 @@
         <td>{{ item.part_count }}</td>
         <td>{{ item.part_price }}</td>
         <td>{{ item.full_price }}</td>
-        <td>{{ item.create_date }}</td>
+        <td>{{ convertDate(item.create_date) }}</td>
         <td>
-          <a @click="showEditPartBlock(showPartEdit, item.id)"  class="button is-warning">Labot</a>
+          <div class="columns">
+            <div class="column">
+              <a
+                @click="showEditPartBlock(showPartEdit, item.id)"
+                class="button is-warning"
+                >Labot</a
+              >
+            </div>
+            <div class="column">
+              <form @submit.prevent="delCarPart(item)" method="POST">
+                <div class="field">
+                  <button class="button is-danger">Dzēst detaļu</button>
+                </div>
+              </form>
+            </div>
+          </div>
         </td>
       </tr>
     </tbody>
@@ -419,6 +460,7 @@ export default {
   name: "OrderView",
   data() {
     return {
+      car: {},
       order: {},
       serviceEditObj: {},
       partEditObj: {},
@@ -445,6 +487,7 @@ export default {
       const formatter = new Intl.NumberFormat("en-US", {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
+        useGrouping: false,
       });
       return formatter.format(
         this.spendtime * this.hourRate + (this.hourRate * this.rateValue) / 100
@@ -513,6 +556,17 @@ export default {
         .get(`/customer/order/${this.$route.params.id}`)
         .then((res) => {
           this.order = res.data.order[0];
+          this.getCar(this.order.car_id);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    async getCar(id) {
+      await axios
+        .get(`/customer/car/${id}`)
+        .then((res) => {
+          this.car = res.data.car[0];
         })
         .catch((error) => {
           console.log(error);
@@ -554,6 +608,50 @@ export default {
         .then((res) => {
           console.log(res);
           this.reloadpage();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    async delCarPart(item) {
+      let payload = {
+        part_id: item.id,
+      };
+      await axios
+        .post(`/customer/partdel`, payload, {
+          headers: {
+            "Content-type": "application/json",
+          },
+        })
+        .then((res) => {
+          if (res.data.status === "part_delete") {
+            this.reloadpage();
+          } else {
+            //need thing about how to improve error messaging
+            console.log("somthing wrong");
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    async delServiceCar(item) {
+      let payload = {
+        service_id: item.id,
+      };
+      await axios
+        .post(`/customer/servicedel`, payload, {
+          headers: {
+            "Content-type": "application/json",
+          },
+        })
+        .then((res) => {
+          if (res.data.status === "service_delete") {
+            this.reloadpage();
+          } else {
+            //need thing about how to improve error messaging
+            console.log("somthing wrong");
+          }
         })
         .catch((error) => {
           console.log(error);

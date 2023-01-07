@@ -3,6 +3,13 @@
     <div class="card-content">
       <p class="title">Pasūtījuma sagataves forma</p>
     </div>
+    <footer class="card-footer">
+      <router-link
+        :to="'/order/' + this.customer.order_id"
+        class="card-footer-item"
+        >Darbs ar auto lapa</router-link
+      >
+    </footer>
   </div>
   <hr />
   <div class="columns">
@@ -103,7 +110,7 @@
       </h3>
     </div>
   </div>
-  <h2>Detaļu saraksts</h2>
+  <h4  class="is-size-4">Detaļu saraksts</h4>
   <table class="table is-fullwidth">
     <thead>
       <tr>
@@ -127,11 +134,12 @@
   <div class="columns">
     <div class="column">
       <h4 class="is-size-4 has-text-left">
-        Par detaļām kopā: {{ getFullPartPrice }} euro
+        Par detaļām kopā: <strong>{{ getFullPartPrice }}</strong> euro. Summa ir
+        ar 21% nodokli.
       </h4>
     </div>
   </div>
-  <h2>Izdarītā darba saraksts</h2>
+  <h4 class="is-size-4" >Izdarītā darba saraksts</h4>
   <table class="table is-fullwidth">
     <thead>
       <tr>
@@ -151,18 +159,15 @@
   <div class="columns">
     <div class="column">
       <h4 class="is-size-4 has-text-left">
-        Par darbu kopā: {{ getFullServicePrice }} euro
-      </h4>
-    </div>
-    <div class="column">
-      <h4 class="is-size-4 has-text-left">
-        Summas ir norādītas ar 21% nodokli
+        Par darbu kopā: <strong>{{ getFullServicePrice }}</strong> euro. Summa
+        ir ar 21% nodokli.
       </h4>
     </div>
   </div>
+  <hr />
   <div class="columns">
     <div class="column">
-      <h4 class="is-size-4 has-text-left">Kopā: {{ getFullPrice }} euro</h4>
+      <h4 class="is-size-4 has-text-left">Kopā: <strong>{{ getFullPrice }}</strong> euro</h4>
     </div>
     <div class="column">
       <h4 class="is-size-4 has-text-left">
@@ -272,7 +277,6 @@ export default {
         .get(`/customer/orderdata/${this.$route.params.id}`)
         .then((res) => {
           this.customer = res.data.info[0];
-          console.log(this.customer);
         })
         .catch((error) => {
           console.log(error);

@@ -25,11 +25,6 @@ def hello_pdf(id):
     return render_pdf(HTML(string=html))
 
 
-@bp.route('/hello_raims.pdf')
-def hello_pdf_check():
-    # Make a PDF straight from HTML in a string.
-    html = render_template('orderpdf.html')
-    return render_pdf(HTML(string=html))
 
 @bp.route('/reg', methods=('GET', 'POST'))
 def customer_reg():
@@ -76,6 +71,17 @@ def customer_car_reg(id):
             return jsonify(status="carregister")
         else:
             return jsonify(status="exist_car", car=car_number.number)
+
+@bp.route('/cardel', methods=('GET', 'POST'))
+def car_delet():
+    if request.method == 'POST':
+        json_data = request.get_json()
+        car_id = json_data['car_id']
+        car = Car.query.get(int(car_id))
+        db.session.delete(car)
+        db.session.commit()
+        return jsonify(status="car_delete")
+
 
 @bp.route('/caredit/<id>', methods=('GET', 'POST'))
 def car_edit(id):
@@ -170,6 +176,16 @@ def order():
         db.session.add(new_order)
         db.session.commit()
         return jsonify(status="orderregister")
+
+@bp.route('/orderdel', methods=('GET', 'POST'))
+def del_order():
+    if request.method == 'POST':
+        json_data = request.get_json()
+        order_id = json_data['order_id']
+        order = Order.query.get(int(order_id))
+        db.session.delete(order)
+        db.session.commit()
+        return jsonify(status="order_delete")
 
 @bp.route('/addorderdata', methods=('GET', 'POST'))
 def add_Order_data():
@@ -283,6 +299,27 @@ def car_service(id):
         db.session.add(new_service)
         db.session.commit()
         return jsonify(status="car_service_reg")
+
+# service api
+@bp.route('/servicedel', methods=('GET', 'POST'))
+def del_service():
+    if request.method == 'POST':
+        json_data = request.get_json()
+        service_id = json_data['service_id']
+        service = ServiceCar.query.get(int(service_id))
+        db.session.delete(service)
+        db.session.commit()
+        return jsonify(status="service_delete")
+
+@bp.route('/partdel', methods=('GET', 'POST'))
+def del_part():
+    if request.method == 'POST':
+        json_data = request.get_json()
+        part_id = json_data['part_id']
+        part = PartCar.query.get(int(part_id))
+        db.session.delete(part)
+        db.session.commit()
+        return jsonify(status="part_delete")
 
 @bp.route('/part/<id>', methods=('GET', 'POST'))
 def car_part(id):
