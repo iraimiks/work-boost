@@ -11,10 +11,22 @@
       <p class="subtitle">
         Telefons: <strong>{{ customer.phone }}</strong>
       </p>
+      <hr />
+      <p class="subtitle">
+        Klienta tips: <strong>{{ customer_data.customer_type }}</strong>
+      </p>
+      <p class="subtitle">
+        Klienta reg. nr. vai personas kods: <strong>{{ customer_data.customer_number }}</strong>
+      </p>
+      <p class="subtitle">
+        Addrese: <strong>{{ customer_data.customer_street }}</strong>
+      </p>
     </div>
     <footer class="card-footer">
       <a @click="showEditBlock(showEdit)" class="card-footer-item">Labot</a>
-      <a href="#" class="card-footer-item">Dzēst "nestrādā"</a>
+      <a @click="showDataFormBlock(showDataForm)" class="card-footer-item"
+        >Pievienot datus klienta</a
+      >
     </footer>
   </div>
   <div class="card" v-bind:class="{ 'block-show': !showEdit }">
@@ -45,6 +57,48 @@
           </div>
           <div class="field">
             <button class="button is-warning">Labot datus</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="card" v-bind:class="{ 'block-show': !showDataForm }">
+    <div class="card-content">
+      <div class="content">
+        <form @submit.prevent="regCustomerData" method="POST">
+          <div class="field">
+            <label class="label">Klienta veids</label>
+            <div class="control">
+              <div class="select">
+                <select v-model="customer_type">
+                  <option>Fizisks</option>
+                  <option>Juridisks</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="field">
+            <label class="label">Reg. nr. vai Personas kods</label>
+            <div class="control">
+              <input
+                class="input is-success"
+                type="text"
+                v-model="customer_number"
+              />
+            </div>
+          </div>
+          <div class="field">
+            <label class="label">Adrese</label>
+            <div class="control">
+              <input
+                class="input is-success"
+                type="text"
+                v-model="customer_street"
+              />
+            </div>
+          </div>
+          <div class="field">
+            <button class="button is-warning">Pievienot datus</button>
           </div>
         </form>
       </div>
@@ -172,17 +226,23 @@ export default {
       cars: [],
       show: false,
       showEdit: false,
+      showDataForm: false,
       numberexist: true,
       customer: {},
+      customer_data: {},
       carbrand: "",
       carnumber: "",
       vinnumber: "",
       odometer: "",
+      customer_type: "",
+      customer_number: "",
+      customer_street: "",
     };
   },
   mounted() {
     this.getCustomer();
     this.getCars();
+    this.getCustomerType();
   },
   methods: {
     async getCustomer() {
@@ -190,6 +250,16 @@ export default {
         .get(`/customer/${this.$route.params.id}`)
         .then((res) => {
           this.customer = res.data.customer[0];
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    async getCustomerType() {
+      await axios
+        .get(`/customer/customerdata/${this.$route.params.id}`)
+        .then((res) => {
+          this.customer_data = res.data.customer_data[0];
         })
         .catch((error) => {
           console.log(error);
@@ -226,8 +296,8 @@ export default {
     },
     async delCustomerCar(item) {
       let payload = {
-        car_id: item.id
-      }
+        car_id: item.id,
+      };
       await axios
         .post(`/customer/cardel`, payload, {
           headers: {
@@ -235,11 +305,11 @@ export default {
           },
         })
         .then((res) => {
-          if(res.data.status === "car_delete") {
+          if (res.data.status === "car_delete") {
             this.reloadpage();
           } else {
             //need thing about how to improve error messaging
-            console.log("somthing wrong")
+            console.log("somthing wrong");
           }
         })
         .catch((error) => {
@@ -271,11 +341,34 @@ export default {
           console.log(error);
         });
     },
+    async regCustomerData() {
+      let payload = {
+        customer_type: this.customer_type,
+        customer_number: this.customer_number,
+        customer_street: this.customer_street,
+      };
+      await axios
+        .post(`/customer/custtype/${this.$route.params.id}`, payload, {
+          headers: {
+            "Content-type": "application/json",
+          },
+        })
+        .then((res) => {
+          console.log(res);
+          this.reloadpage();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
     showBlock(check) {
       this.show = !check;
     },
     showEditBlock(check) {
       this.showEdit = !check;
+    },
+    showDataFormBlock(check) {
+      this.showDataForm = !check;
     },
     reloadpage() {
       window.location.reload();

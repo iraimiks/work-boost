@@ -3,7 +3,7 @@ from flask import (
     Blueprint, request, jsonify, render_template
 )
 from flaskr import db
-from flaskr.customers.customer import Customer, Car, Order, ServiceCar, OrderData, PartCar, AddOrderData
+from flaskr.customers.customer import Customer, Car, Order, ServiceCar, OrderData, PartCar, AddOrderData, CustomerType
 from flaskr.users.user import User
 from sqlalchemy import desc
 from flask_weasyprint import HTML, render_pdf
@@ -54,6 +54,22 @@ def customer_edit(id):
         db.session.commit()
         return jsonify(status="customer_edit")
 
+@bp.route('/custtype/<id>', methods=('GET', 'POST'))
+def customer_type_reg(id):
+    if request.method == 'POST':
+        json_data = request.get_json()
+        customer_type = json_data['customer_type']
+        customer_number = json_data['customer_number']
+        customer_street = json_data['customer_street']
+        customer = CustomerType.query.filter_by(customer_number=customer_number).first()
+        
+        if customer is None:
+            new_cust_type = CustomerType(customer_type, customer_number, customer_street, create_date=datetime.datetime.now(), customer_id=id)
+            db.session.add(new_cust_type)
+            db.session.commit()
+            return jsonify(status="new_customer_type")
+        else:
+            return jsonify(status="customer_number_exist")
 
 @bp.route('/carreg/<id>', methods=('GET', 'POST'))
 def customer_car_reg(id):
@@ -129,6 +145,12 @@ def customer(id):
     if request.method == 'GET':
         customer = Customer.query.filter_by(id=id).first()
         return jsonify({'customer': [customer.serialized]})
+
+@bp.route('/customerdata/<id>', methods=('GET', 'POST'))
+def customer_data(id):
+    if request.method == 'GET':
+        customer = CustomerType.query.filter_by(customer_id=id).first()
+        return jsonify({'customer_data': [customer.serialized]})
 
 @bp.route('/workers', methods=('GET', 'POST'))
 def workers():

@@ -1,5 +1,32 @@
 from flaskr import db
 
+
+class CustomerType(db.Model):
+    id = db.Column(db.Integer(), primary_key=True, autoincrement=True)
+    customer_type = db.Column(db.String(length=50))
+    customer_number = db.Column(db.String(length=50))
+    customer_street = db.Column(db.String(length=150))
+    customer_id = db.Column(db.Integer(), db.ForeignKey('customer.id'), nullable=False)
+    create_date = db.Column(db.DateTime)
+    def __init__(self, customer_type, customer_number, customer_street, create_date, customer_id):
+        self.customer_type = customer_type
+        self.customer_number = customer_number
+        self.customer_street = customer_street
+        self.create_date = create_date
+        self.customer_id = customer_id
+
+    
+    @property
+    def serialized(self):
+        return {
+            'id': self.id,
+            'customer_type': self.customer_type,
+            'customer_number': self.customer_number,
+            'customer_street': self.customer_street,
+            'create_date': self.create_date,
+            'customer_id': self.customer_id,
+        }
+
 class Customer(db.Model):
     id = db.Column(db.Integer(), primary_key=True, autoincrement=True)
     customer_name = db.Column(db.String(length=50))
