@@ -19,58 +19,59 @@
 <body>
   <div class="container-fluid">
     <div class="row">
-      <div class="col border border-dark">
-        Rēķina Nr.: <strong>{{ order['order_name'] }}</strong>
+      <div class="col">
+        Psūtījuma kods: <strong>{{ order['order_name'] }}</strong>
       </div>
-      <div class="col border border-dark">
+      <div class="col">
         Izrakstīšanas datums: <strong>{{ today }}</strong>
       </div>
     </div>
     <div class="row">
-      <div class="col border border-dark">
+      <div class="col">
         Uzņēmums: <strong>AUTOBOOST SIA</strong>
       </div>
-      <div class="col border border-dark">
-        <strong>LV40203418867</strong>
+      <div class="col">
+        Reģ. nr.: <strong>LV40203418867</strong>
       </div>
     </div>
     <div class="row">
-      <div class="col border border-dark">
+      <div class="col">
         Adrese: <strong>Liepājas iela 5 Ludza</strong>
       </div>
     </div>
     <div class="row">
-      <div class="col border border-dark">
+      <div class="col">
         Norēķinu rekvizīti: <strong>Citadele banka</strong>
       </div>
-      <div class="col border border-dark">
-        <strong>LV47PARXO027844410001</strong>
+      <div class="col">
+        Bankas konts: <strong>LV47PARXO027844410001</strong>
       </div>
     </div>
+    <hr>
     <div class="row">
-      <div class="col border border-dark">
+      <div class="col">
         Pakalpojuma saņēmējs: <strong>{{ order['customer_name'] }}</strong>
       </div>
-      <div class="col border border-dark">
-        Reg. nr.: <strong>{{ orderdata['customer_reg_number'] }}</strong>
+      <div class="col">
+        Reģ. Nr. vai personas kods: <strong>{{ order['customer_number'] }}</strong>
       </div>
     </div>
     <div class="row">
-      <div class="col border border-dark">
-        Addrese: <strong>{{ orderdata['customer_address'] }}</strong>
+      <div class="col">
+        Addrese: <strong>{{ order['customer_street'] }}</strong>
       </div>
 
     </div>
     <div class="row">
-      <div class="col border border-dark">
+      <div class="col">
         Pakalpojuma saņemšanas vieta: <strong>Liepājas iela 5 Ludza</strong>
       </div>
     </div>
     <div class="row">
-      <div class="col border border-dark">
+      <div class="col">
         Apmaksas veids un kārtība: <strong>{{ orderdata['pay_option'] }}</strong>
       </div>
-      <div class="col border border-dark">
+      <div class="col">
         Auto: <strong>{{ order['brand'] }} - {{ order['number'] }}</strong>
       </div>
     </div>
@@ -79,7 +80,6 @@
     <table class="table">
       <thead>
         <tr>
-          <th>ID</th>
           <th>Detaļas nosaukums</th>
           <th>Detaļas skaits</th>
           <th>Vienas vienības cena</th>
@@ -89,21 +89,14 @@
       <tbody>
         {% for part in parts %}
         <tr>
-          <td>{{ part['id'] }}</td>
           <td>{{ part['part_name'] }}</td>
           <td>{{ part['part_count'] }}</td>
-          <td>{{ part['part_price'] }}</td>
-          <td>{{ part['full_price'] }}</td>
+          <td>{{ "%.2f"|format(part['part_price']) }}</td>
+          <td>{{ "%.2f"|format(part['full_price']|float) }}</td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
-    <div class="row">
-      <div class="col border border-dark">
-        Par detaļām kopā: <strong>{{ orderdata['full_part_price'] }} euro</strong>
-      </div>
-    </div>
-    <hr>
     <h2>Daraba saraksts</h2>
     <table class="table">
       <thead>
@@ -118,34 +111,22 @@
         <tr>
           <td>{{ service['work_type'] }}</td>
           <td>{{ service['description'] }}</td>
-          <td>{{ service['work_price'] }}</td>
+          <td>{{ "%.2f"|format(service['work_price']|float) }}</td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
     <div class="row">
-      <div class="col border border-dark">
-        Par detaļām kopā: <strong>{{ orderdata['full_service_price'] }} euro</strong>
+      <div class="col">
+        Pavisam apmaksai: <strong>{{ "%.2f"|format(orderdata['full_price']|float) }} euro</strong>
+        <br>
+        <em>Summa norādīta ar PVN 21%</em>
       </div>
-    </div>
-    <hr>
-    <div class="row">
-      <div class="col border border-dark">
-        Pavisam apmaksai: <strong>{{ orderdata['full_price'] }} euro</strong> 
-      </div>
-      <div class="col border border-dark">
+      <div class="col">
         Vardiem: <strong>{{ orderdata['price_in_words'] }}</strong>
       </div>
     </div>
     <hr>
-    <div class="row">
-      <div class="col border border-dark">
-        Izsniedza: <strong>{{ orderdata['order_prep_name'] }}</strong>
-      </div>
-      <div class="col border border-dark">
-        Saņēma: <strong>{{ orderdata['order_get_name'] }}</strong>
-      </div>
-    </div>
   </div>
   <h3>Rēķins sagatavots elektronisķi, derīgs bez paraksta</h3>
 </body>

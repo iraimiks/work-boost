@@ -72,14 +72,14 @@
     </div>
     <div class="column is-6 border-box">
       <h3 class="is-size-4 has-text-left">
-        Reg. nr.: <strong><input v-model="customerRegNumber" /></strong>
+        Reg. nr. vai Personas Kods: <strong>{{ customer.customer_number }}</strong>
       </h3>
     </div>
   </div>
   <div class="columns">
     <div class="column is-6 border-box">
       <h3 class="is-size-4 has-text-left">
-        Addrese: <strong><input v-model="customerAddress" /></strong>
+        Addrese: <strong>{{ customer.customer_street }}</strong>
       </h3>
     </div>
   </div>
@@ -175,18 +175,6 @@
       </h4>
     </div>
   </div>
-  <div class="columns">
-    <div class="column">
-      <h4 class="is-size-4 has-text-left">
-        Iznsniedza: <input v-model="orderPrepName" />
-      </h4>
-    </div>
-    <div class="column">
-      <h4 class="is-size-4 has-text-left">
-        Saņēma: <input v-model="orderGetName" />
-      </h4>
-    </div>
-  </div>
   <hr />
   <div class="columns">
     <div class="column">
@@ -215,11 +203,7 @@ export default {
       customer: {},
       servicecar: [],
       partscar: [],
-      customerRegNumber: "",
-      customerAddress: "",
       payOption: "",
-      orderPrepName: "",
-      orderGetName: "",
       priceInWords: "",
     };
   },
@@ -306,12 +290,8 @@ export default {
       let payload = {
         full_service_price: this.getFullServicePrice,
         full_part_price: this.getFullPartPrice,
-        customer_reg_number: this.customerRegNumber,
-        customer_address: this.customerAddress,
         pay_option: this.payOption,
         full_price: this.getFullPrice,
-        order_prep_name: this.orderPrepName,
-        order_get_name: this.orderGetName,
         price_in_words: this.priceInWords,
         order_id: this.$route.params.id,
       };

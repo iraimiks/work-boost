@@ -55,7 +55,39 @@
               />
             </div>
           </div>
+          <hr>
           <div class="field">
+            <label class="label">Klienta veids</label>
+            <div class="control">
+              <div class="select">
+                <select v-model="customer_data.customer_type">
+                  <option>Fizisks</option>
+                  <option>Juridisks</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="field">
+            <label class="label">Reg. nr. vai Personas kods</label>
+            <div class="control">
+              <input
+                class="input is-success"
+                type="text"
+                v-model="customer_data.customer_number"
+              />
+            </div>
+          </div>
+          <div class="field">
+            <label class="label">Adrese</label>
+            <div class="control">
+              <input
+                class="input is-success"
+                type="text"
+                v-model="customer_data.customer_street"
+              />
+            </div>
+          </div>
+            <div class="field">
             <button class="button is-warning">Labot datus</button>
           </div>
         </form>
@@ -275,10 +307,32 @@ export default {
           console.log(error);
         });
     },
+    async editCustomerTypeData() {
+      let payload = {
+        edit_customer_type: this.customer_data.customer_type,
+        edit_customer_number: this.customer_data.customer_number,
+        edit_customer_street: this.customer_data.customer_street
+      };
+      await axios
+        .post(`/customer/custdataedit/${this.$route.params.id}`, payload, {
+          headers: {
+            "Content-type": "application/json",
+          },
+        })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
     async editCustomerData() {
       let payload = {
         edit_name: this.customer.name,
         edit_phone: this.customer.phone,
+        edit_customer_type: this.customer_data.customer_type,
+        edit_customer_number: this.customer_data.customer_number,
+        edit_customer_street: this.customer_data.customer_street
       };
       await axios
         .post(`/customer/dataedit/${this.$route.params.id}`, payload, {

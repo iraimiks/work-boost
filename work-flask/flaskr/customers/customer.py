@@ -159,23 +159,15 @@ class AddOrderData(db.Model):
     id = db.Column(db.Integer(), primary_key=True, autoincrement=True)
     full_service_price = db.Column(db.String(length=50))
     full_part_price = db.Column(db.String(length=50))
-    customer_reg_number = db.Column(db.String(length=50))
-    customer_address = db.Column(db.String(length=50))
     pay_option = db.Column(db.String(length=50))
     full_price = db.Column(db.String(length=50))
-    order_prep_name = db.Column(db.String(length=50))
-    order_get_name = db.Column(db.String(length=50))
-    price_in_words = db.Column(db.String(length=50))
+    price_in_words = db.Column(db.String(length=400))
     order_id = db.Column(db.Integer())
-    def __init__(self, full_service_price, full_part_price, customer_reg_number, customer_address, pay_option, full_price, order_prep_name, order_get_name, price_in_words, order_id):
+    def __init__(self, full_service_price, full_part_price, pay_option, full_price, price_in_words, order_id):
         self.full_service_price = full_service_price
         self.full_part_price = full_part_price
-        self.customer_reg_number = customer_reg_number
-        self.customer_address = customer_address
         self.pay_option = pay_option
         self.full_price = full_price
-        self.order_prep_name = order_prep_name
-        self.order_get_name = order_get_name
         self.price_in_words = price_in_words
         self.order_id = order_id
     @property
@@ -184,12 +176,8 @@ class AddOrderData(db.Model):
             'id': self.id,
             'full_service_price': self.full_service_price,
             'full_part_price': self.full_part_price,
-            'customer_reg_number': self.customer_reg_number,
-            'customer_address': self.customer_address,
             'pay_option': self.pay_option,
-            'order_prep_name': self.order_prep_name,
-            'order_prep_name': self.order_prep_name,
-            'order_get_name': self.order_get_name,
+            'full_price': self.full_price,
             'price_in_words': self.price_in_words,
             'order_id': self.order_id,
         }
@@ -198,6 +186,8 @@ class OrderData(db.Model):
     id = db.Column(db.Integer(), primary_key=True, autoincrement=True)
     customer_name = db.Column(db.String(length=50))
     phone = db.Column(db.String(length=50))
+    customer_number = db.Column(db.String(length=50))
+    customer_street = db.Column(db.String(length=150))
     brand = db.Column(db.String(length=50))
     number = db.Column(db.String(length=50))
     vinumber = db.Column(db.String(length=50))
@@ -206,7 +196,7 @@ class OrderData(db.Model):
     order_id = db.Column(db.Integer())
     order_name = db.Column(db.String(length=50))
     create_out = db.Column(db.DateTime)
-    def __init__(self, customer_name, phone, brand, number, vinumber, odometer, create_in, order_id, order_name, create_out):
+    def __init__(self, customer_name, phone, brand, number, vinumber, odometer, create_in, order_id, order_name, customer_number, customer_street, create_out):
         self.customer_name = customer_name
         self.phone = phone
         self.brand = brand
@@ -217,12 +207,16 @@ class OrderData(db.Model):
         self.create_out = create_out
         self.order_name = order_name
         self.order_id = order_id
+        self.customer_number = customer_number
+        self.customer_street = customer_street
     @property
     def serialized(self):
         return {
             'id': self.id,
             'customer_name': self.customer_name,
             'phone': self.phone,
+            'customer_number': self.customer_number,
+            'customer_street': self.customer_street,
             'brand': self.brand,
             'number': self.number,
             'vinumber': self.vinumber,

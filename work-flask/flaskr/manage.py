@@ -17,10 +17,10 @@ def hello_pdf(id):
     time = datetime.datetime.now()
 
     if request.method == 'GET':
-        order = OrderData.query.filter_by(order_id=id).first()
+        order = OrderData.query.order_by(OrderData.id.desc()).first()
         parts = PartCar.query.filter_by(order_id=id).all()
         services = ServiceCar.query.filter_by(order_id=id).all()
-        orderdata = AddOrderData.query.filter_by(order_id=id).first()
+        orderdata = AddOrderData.query.order_by(AddOrderData.id.desc()).first()
         html = render_template('orderpdf.html', order=order, parts=parts, services=services, orderdata=orderdata, today=time.strftime("%d/%m/%y"))
     return render_pdf(HTML(string=html))
 
@@ -45,10 +45,18 @@ def customer_reg():
 @bp.route('/dataedit/<id>', methods=('GET', 'POST'))
 def customer_edit(id):
     customer = Customer.query.get(id)
+    customer_type = CustomerType.query.filter_by(customer_id=id).first()
     if request.method == 'POST':
         json_data = request.get_json()
+        print(json_data)
         customer_name = json_data['edit_name']
         phone = json_data['edit_phone']
+        customer_type_data = json_data['edit_customer_type']
+        customer_number = json_data['edit_customer_number']
+        customer_street = json_data['edit_customer_street']
+        customer_type.customer_type = customer_type_data
+        customer_type.customer_number = customer_number
+        customer_type.customer_street = customer_street
         customer.customer_name = customer_name
         customer.phone = phone
         db.session.commit()
@@ -215,23 +223,15 @@ def add_Order_data():
         json_data = request.get_json()
         full_service_price = json_data['full_service_price']
         full_part_price = json_data['full_part_price']
-        customer_reg_number = json_data['customer_reg_number']
-        customer_address = json_data['customer_address']
         pay_option = json_data['pay_option']
         full_price = json_data['full_price']
-        order_prep_name = json_data['order_prep_name']
-        order_get_name = json_data['order_get_name']
         price_in_words = json_data['price_in_words']
         order_id = json_data['order_id']
         new_add_order_data = AddOrderData(
             full_service_price,
             full_part_price,
-            customer_reg_number,
-            customer_address,
             pay_option,
             full_price,
-            order_prep_name,
-            order_get_name,
             price_in_words,
             order_id
         )
@@ -246,6 +246,7 @@ def order_data():
         cust_id = json_data['cust_id']
         order_id = json_data['order_id']
         customer = Customer.query.filter_by(id=cust_id).first()
+        customer_type_data = CustomerType.query.filter_by(customer_id=cust_id).first()
         car_order = Order.query.filter_by(id=order_id).first()
         customer_car = Car.query.filter_by(id=car_order.car_id).first()
         new_order_data = OrderData(
@@ -258,6 +259,8 @@ def order_data():
             car_order.create_date,
             car_order.id,
             car_order.name,
+            customer_type_data.customer_number,
+            customer_type_data.customer_street,
             create_out=datetime.datetime.now(),
             )
         db.session.add(new_order_data)
@@ -371,6 +374,6 @@ def car_parts(id):
 @bp.route('/orderdata/<id>', methods=('GET', 'POST'))
 def get_order_data(id):
     if request.method == 'GET':
-        order = OrderData.query.filter_by(order_id=id).first()
+        order = OrderData.query.order_by(OrderData.id.desc()).first()
         services = ServiceCar.query.filter_by(order_id=id).all()
         return jsonify({'info': [order.serialized], 'service_car': [service.serialized for service in services]})
