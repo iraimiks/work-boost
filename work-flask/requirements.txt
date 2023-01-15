@@ -4,3 +4,4 @@ Flask-SQLAlchemy
 psycopg2-binary
 weasyprint
 flask_weasyprint
+Flask-Migrate
