@@ -7,8 +7,8 @@ RUN pip3 install -r requirements.txt
 
 COPY . .
 
-RUN python run.py db init
-RUN python run.py db migrate -m "Initial migration."
-RUN python run.py db upgrade
+RUN flask --app run.py db init
+RUN flask --app run.py db migrate -m "Initial migration."
+RUN flask --app run.py db upgrade
 
 CMD ["python", "./run.py"]
