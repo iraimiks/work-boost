@@ -6,12 +6,16 @@ class CustomerType(db.Model):
     customer_type = db.Column(db.String(length=50))
     customer_number = db.Column(db.String(length=50))
     customer_street = db.Column(db.String(length=150))
+    customer_bank_name = db.Column(db.String(length=150))
+    customer_bank_acc = db.Column(db.String(length=150))
     customer_id = db.Column(db.Integer(), db.ForeignKey('customer.id'), nullable=False)
     create_date = db.Column(db.DateTime)
-    def __init__(self, customer_type, customer_number, customer_street, create_date, customer_id):
+    def __init__(self, customer_type, customer_number, customer_street, customer_bank_name, customer_bank_acc, create_date, customer_id):
         self.customer_type = customer_type
         self.customer_number = customer_number
         self.customer_street = customer_street
+        self.customer_bank_name = customer_bank_name
+        self.customer_bank_acc = customer_bank_acc
         self.create_date = create_date
         self.customer_id = customer_id
 
@@ -23,6 +27,8 @@ class CustomerType(db.Model):
             'customer_type': self.customer_type,
             'customer_number': self.customer_number,
             'customer_street': self.customer_street,
+            'customer_bank_name': self.customer_bank_name,
+            'customer_bank_acc': self.customer_bank_acc,
             'create_date': self.create_date,
             'customer_id': self.customer_id,
         }
@@ -159,14 +165,20 @@ class AddOrderData(db.Model):
     id = db.Column(db.Integer(), primary_key=True, autoincrement=True)
     full_service_price = db.Column(db.String(length=50))
     full_part_price = db.Column(db.String(length=50))
+    full_count = db.Column(db.String(length=50))
+    full_tax = db.Column(db.String(length=50))
     pay_option = db.Column(db.String(length=50))
     full_price = db.Column(db.String(length=50))
+    full_price_no_tax = db.Column(db.String(length=50))
     price_in_words = db.Column(db.String(length=400))
     order_id = db.Column(db.Integer())
-    def __init__(self, full_service_price, full_part_price, pay_option, full_price, price_in_words, order_id):
+    def __init__(self, full_service_price, full_part_price, pay_option, full_price_no_tax, full_count, full_tax, full_price, price_in_words, order_id):
         self.full_service_price = full_service_price
         self.full_part_price = full_part_price
         self.pay_option = pay_option
+        self.full_price_no_tax = full_price_no_tax
+        self.full_count = full_count
+        self.full_tax = full_tax
         self.full_price = full_price
         self.price_in_words = price_in_words
         self.order_id = order_id
@@ -177,6 +189,9 @@ class AddOrderData(db.Model):
             'full_service_price': self.full_service_price,
             'full_part_price': self.full_part_price,
             'pay_option': self.pay_option,
+            'full_price_no_tax': self.full_price_no_tax,
+            'full_count': self.full_count,
+            'full_tax': self.full_tax,
             'full_price': self.full_price,
             'price_in_words': self.price_in_words,
             'order_id': self.order_id,
@@ -187,7 +202,9 @@ class OrderData(db.Model):
     customer_name = db.Column(db.String(length=50))
     phone = db.Column(db.String(length=50))
     customer_number = db.Column(db.String(length=50))
-    customer_street = db.Column(db.String(length=150))
+    customer_street = db.Column(db.String(length=300))
+    customer_bank_name = db.Column(db.String(length=50))
+    customer_bank_acc = db.Column(db.String(length=50))
     brand = db.Column(db.String(length=50))
     number = db.Column(db.String(length=50))
     vinumber = db.Column(db.String(length=50))
@@ -196,7 +213,7 @@ class OrderData(db.Model):
     order_id = db.Column(db.Integer())
     order_name = db.Column(db.String(length=50))
     create_out = db.Column(db.DateTime)
-    def __init__(self, customer_name, phone, brand, number, vinumber, odometer, create_in, order_id, order_name, customer_number, customer_street, create_out):
+    def __init__(self, customer_name, phone, brand, number, vinumber, odometer, create_in, order_id, order_name, customer_number, customer_street, customer_bank_name, customer_bank_acc, create_out):
         self.customer_name = customer_name
         self.phone = phone
         self.brand = brand
@@ -209,6 +226,8 @@ class OrderData(db.Model):
         self.order_id = order_id
         self.customer_number = customer_number
         self.customer_street = customer_street
+        self.customer_bank_name = customer_bank_name
+        self.customer_bank_acc = customer_bank_acc
     @property
     def serialized(self):
         return {
@@ -217,6 +236,8 @@ class OrderData(db.Model):
             'phone': self.phone,
             'customer_number': self.customer_number,
             'customer_street': self.customer_street,
+            'customer_bank_name': self.customer_bank_name,
+            'customer_bank_acc': self.customer_bank_acc,
             'brand': self.brand,
             'number': self.number,
             'vinumber': self.vinumber,

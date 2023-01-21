@@ -16,10 +16,19 @@
         Klienta tips: <strong>{{ customer_data.customer_type }}</strong>
       </p>
       <p class="subtitle">
-        Klienta reg. nr. vai personas kods: <strong>{{ customer_data.customer_number }}</strong>
+        Klienta reg. nr. vai personas kods:
+        <strong>{{ customer_data.customer_number }}</strong>
       </p>
       <p class="subtitle">
         Addrese: <strong>{{ customer_data.customer_street }}</strong>
+      </p>
+      <p class="subtitle">
+        Banka:
+        <strong>{{ customer_data.customer_bank_name }}</strong>
+      </p>
+      <p class="subtitle">
+        Bankas konts:
+        <strong>{{ customer_data.customer_bank_acc }}</strong>
       </p>
     </div>
     <footer class="card-footer">
@@ -55,7 +64,7 @@
               />
             </div>
           </div>
-          <hr>
+          <hr />
           <div class="field">
             <label class="label">Klienta veids</label>
             <div class="control">
@@ -87,7 +96,27 @@
               />
             </div>
           </div>
-            <div class="field">
+          <div class="field">
+            <label class="label">Norēķinu banka</label>
+            <div class="control">
+              <input
+                class="input is-success"
+                type="text"
+                v-model="customer_data.customer_bank_name"
+              />
+            </div>
+          </div>
+          <div class="field">
+            <label class="label">Norēķinu konts</label>
+            <div class="control">
+              <input
+                class="input is-success"
+                type="text"
+                v-model="customer_data.customer_bank_acc"
+              />
+            </div>
+          </div>
+          <div class="field">
             <button class="button is-warning">Labot datus</button>
           </div>
         </form>
@@ -126,6 +155,26 @@
                 class="input is-success"
                 type="text"
                 v-model="customer_street"
+              />
+            </div>
+          </div>
+          <div class="field">
+            <label class="label">Norēķinu banka</label>
+            <div class="control">
+              <input
+                class="input is-success"
+                type="text"
+                v-model="customer_bank_name"
+              />
+            </div>
+          </div>
+          <div class="field">
+            <label class="label">Norēķinu konts</label>
+            <div class="control">
+              <input
+                class="input is-success"
+                type="text"
+                v-model="customer_bank_acc"
               />
             </div>
           </div>
@@ -269,6 +318,8 @@ export default {
       customer_type: "",
       customer_number: "",
       customer_street: "",
+      customer_bank_name: "",
+      customer_bank_acc: "",
     };
   },
   mounted() {
@@ -307,32 +358,15 @@ export default {
           console.log(error);
         });
     },
-    async editCustomerTypeData() {
-      let payload = {
-        edit_customer_type: this.customer_data.customer_type,
-        edit_customer_number: this.customer_data.customer_number,
-        edit_customer_street: this.customer_data.customer_street
-      };
-      await axios
-        .post(`/customer/custdataedit/${this.$route.params.id}`, payload, {
-          headers: {
-            "Content-type": "application/json",
-          },
-        })
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    },
     async editCustomerData() {
       let payload = {
         edit_name: this.customer.name,
         edit_phone: this.customer.phone,
         edit_customer_type: this.customer_data.customer_type,
         edit_customer_number: this.customer_data.customer_number,
-        edit_customer_street: this.customer_data.customer_street
+        edit_customer_street: this.customer_data.customer_street,
+        edit_customer_name: this.customer_data.customer_bank_name,
+        edit_customer_bank_acc: this.customer_data.customer_bank_acc,
       };
       await axios
         .post(`/customer/dataedit/${this.$route.params.id}`, payload, {
@@ -400,6 +434,8 @@ export default {
         customer_type: this.customer_type,
         customer_number: this.customer_number,
         customer_street: this.customer_street,
+        customer_bank_name: this.customer_bank_name,
+        customer_bank_acc: this.customer_bank_acc,
       };
       await axios
         .post(`/customer/custtype/${this.$route.params.id}`, payload, {

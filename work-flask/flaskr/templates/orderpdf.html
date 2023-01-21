@@ -17,93 +17,82 @@
 </head>
 
 <body>
-  <div class="container-fluid">
-    <div class="row">
+  <div class="container-fluid ">
+    <div class="row text-center justify-content-center">
       <div class="col">
-        Psūtījuma kods: <strong>{{ order['order_name'] }}</strong>
+        <strong>Rēķins Nr. {{ order['order_name'] }}</strong>
       </div>
+    </div>
+    <hr>
+    <div class="row">
       <div class="col">
         Izrakstīšanas datums: <strong>{{ today }}</strong>
       </div>
     </div>
     <div class="row">
       <div class="col">
-        Uzņēmums: <strong>AUTOBOOST SIA</strong>
-      </div>
-      <div class="col">
-        Reģ. nr.: <strong>LV40203418867</strong>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        Adrese: <strong>Liepājas iela 5 Ludza</strong>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        Norēķinu rekvizīti: <strong>Citadele banka</strong>
-      </div>
-      <div class="col">
-        Bankas konts: <strong>LV47PARXO027844410001</strong>
-      </div>
-    </div>
-    <hr>
-    <div class="row">
-      <div class="col">
         Pakalpojuma saņēmējs: <strong>{{ order['customer_name'] }}</strong>
       </div>
       <div class="col">
-        Reģ. Nr. vai personas kods: <strong>{{ order['customer_number'] }}</strong>
+        <strong>{{ order['customer_number'] }}</strong>
       </div>
     </div>
     <div class="row">
       <div class="col">
         Addrese: <strong>{{ order['customer_street'] }}</strong>
       </div>
-
     </div>
     <div class="row">
       <div class="col">
-        Pakalpojuma saņemšanas vieta: <strong>Liepājas iela 5 Ludza</strong>
+        Norēķinu rekvizīti: <strong>{{ order['customer_bank_name'] }}</strong>
+      </div>
+      <div class="col">
+        <strong>{{ order['customer_bank_acc'] }}</strong>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        Preču saņemšanas vieta: <strong>LIEPĀJAS IELA 5 LUDZA</strong>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        Auto: <strong>{{ order['brand'] }} - {{ order['number'] }}</strong>
       </div>
     </div>
     <div class="row">
       <div class="col">
         Apmaksas veids un kārtība: <strong>{{ orderdata['pay_option'] }}</strong>
       </div>
-      <div class="col">
-        Auto: <strong>{{ order['brand'] }} - {{ order['number'] }}</strong>
-      </div>
     </div>
     <hr>
-    <h2>Detaļu saraksts</h2>
-    <table class="table">
+    <table class="table table-bordered">
       <thead>
         <tr>
-          <th>Detaļas nosaukums</th>
-          <th>Detaļas skaits</th>
-          <th>Vienas vienības cena</th>
-          <th>Pilnā cena</th>
+          <th>Nosaukums</th>
+          <th>Mērv.</th>
+          <th>Daudz.</th>
+          <th>Cena</th>
+          <th>Summa</th>
         </tr>
       </thead>
       <tbody>
         {% for part in parts %}
         <tr>
           <td>{{ part['part_name'] }}</td>
+          <td>gab.</td>
           <td>{{ part['part_count'] }}</td>
-          <td>{{ "%.2f"|format(part['part_price']) }}</td>
-          <td>{{ "%.2f"|format(part['full_price']|float) }}</td>
+          <td>€ {{ "%.2f"|format(part['part_price']) }}</td>
+          <td>€ {{ "%.2f"|format(part['full_price']|float) }}</td>
         </tr>
         {% endfor %}
       </tbody>
-    </table>
-    <h2>Daraba saraksts</h2>
-    <table class="table">
       <thead>
         <tr>
-          <th>Darba veids</th>
-          <th>Darba apraksts</th>
-          <th>Cena</th>
+          <th>Darbs</th>
+          <th>Nosaukums.</th>
+          <th colspan="2">Daudz.</th>
+          <th>Summa</th>
         </tr>
       </thead>
       <tbody>
@@ -111,24 +100,67 @@
         <tr>
           <td>{{ service['work_type'] }}</td>
           <td>{{ service['description'] }}</td>
-          <td>{{ "%.2f"|format(service['work_price']|float) }}</td>
+          <td colspan="2">{{ service['spend_time'] }}</td>
+          <td>€ {{ "%.2f"|format(service['work_price']|float) }}</td>
         </tr>
         {% endfor %}
       </tbody>
+      <tbody style="background-color: rgb(158, 155, 155);">
+        <tr>
+          <td colspan="5"></td>
+        </tr>
+      </tbody>
+      <tbody>
+        <tr >
+          <td colspan="2"> Kopā:</td>
+          <td colspan="2">{{ orderdata['full_count'] }}</td>
+          <td>€ {{ "%.2f"|format(orderdata['full_price_no_tax']|float) }}</td>
+        </tr>
+      </tbody>
+      <tbody>
+        <tr>
+          <td colspan="2">Pievienotās vērtības nodoklis:</td>
+          <td colspan="2">21%</td>
+          <td>€ {{ "%.2f"|format(orderdata['full_tax']|float) }}</td>
+        </tr>
+      </tbody>
+      <tbody>
+        <tr>
+          <td colspan="4">Pavisam apmaksai:</td>
+          <td>Euro <strong>{{ "%.2f"|format(orderdata['full_price']|float) }}</strong></td>
+        </tr>
+      </tbody>
     </table>
-    <div class="row">
-      <div class="col">
-        Pavisam apmaksai: <strong>{{ "%.2f"|format(orderdata['full_price']|float) }} euro</strong>
-        <br>
-        <em>Summa norādīta ar PVN 21%</em>
-      </div>
-      <div class="col">
-        Vardiem: <strong>{{ orderdata['price_in_words'] }}</strong>
-      </div>
-    </div>
-    <hr>
   </div>
-  <h3>Rēķins sagatavots elektronisķi, derīgs bez paraksta</h3>
+  <hr>
+  <h3>Rēķins sagatavots elektronisķi,deerīgs bez paraksta un zīmoga, </h3>
+  <h3>saskaņā arLatvijas Republikas Grāmatvedības likuma 11.p.8d.1p</h3>
+  <div class="row">
+    <div class="col">
+      Preču nosūtītājs: <strong>AUTOBOOST SIA</strong>
+    </div>
+    <div class="col">
+      <strong>LV40203418867</strong>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      Adrese: <strong>Liepājas iela 5 Ludza</strong>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      Norēķinu rekvizīti: <strong>Citadele banka</strong>
+    </div>
+    <div class="col">
+      Bankas konts: <strong>LV47PARXO027844410001</strong>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      Preču izsniegšanas vieta: <strong>Liepājas iela 5 Ludza</strong>
+    </div>
+  </div>
 </body>
 
 </html>

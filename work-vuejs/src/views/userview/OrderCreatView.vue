@@ -32,18 +32,7 @@
       </h3>
     </div>
   </div>
-  <div class="columns">
-    <div class="column is-6 border-box">
-      <h3 class="is-size-4 has-text-left">
-        Preču nosūtītājs: <strong>AUTOBOOST SIA</strong>
-      </h3>
-    </div>
-    <div class="column is-6 border-box">
-      <h3 class="is-size-4 has-text-left">
-        <strong>LV40203418867</strong>
-      </h3>
-    </div>
-  </div>
+  <hr>
   <div class="columns">
     <div class="column is-6 border-box">
       <h3 class="is-size-4 has-text-left">
@@ -54,12 +43,12 @@
   <div class="columns">
     <div class="column is-6 border-box">
       <h3 class="is-size-4 has-text-left">
-        Norēķinu rekvizīti: <strong>Citadele banka</strong>
+        Klienta Banka: <strong>{{ customer.customer_bank_name }}</strong>
       </h3>
     </div>
     <div class="column is-6 border-box">
       <h3 class="is-size-4 has-text-left">
-        <strong>LV47PARXO027844410001</strong>
+        <strong>{{ customer.customer_bank_acc }}</strong>
       </h3>
     </div>
   </div>
@@ -86,13 +75,6 @@
   <div class="columns">
     <div class="column is-8 border-box">
       <h3 class="is-size-4 has-text-left">
-        Pakalpojuma saņemšanas vieta: <strong>Liepājas iela 5 Ludza</strong>
-      </h3>
-    </div>
-  </div>
-  <div class="columns">
-    <div class="column is-8 border-box">
-      <h3 class="is-size-4 has-text-left">
         Apmaksas veids un kārtība:
         <div class="select">
           <select v-model="payOption">
@@ -110,72 +92,8 @@
       </h3>
     </div>
   </div>
-  <h4  class="is-size-4">Detaļu saraksts</h4>
-  <table class="table is-fullwidth">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Detaļas nosaukums</th>
-        <th>Detaļas skaits</th>
-        <th>Vienas vienības cena</th>
-        <th>Pilnā cena</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="item in partscar" v-bind:key="item">
-        <td>{{ item.id }}</td>
-        <td>{{ item.part_name }}</td>
-        <td>{{ item.part_count }}</td>
-        <td>{{ item.part_price }}</td>
-        <td>{{ item.full_price }}</td>
-      </tr>
-    </tbody>
-  </table>
-  <div class="columns">
-    <div class="column">
-      <h4 class="is-size-4 has-text-left">
-        Par detaļām kopā: <strong>{{ getFullPartPrice }}</strong> euro. Summa ir
-        ar 21% nodokli.
-      </h4>
-    </div>
-  </div>
-  <h4 class="is-size-4" >Izdarītā darba saraksts</h4>
-  <table class="table is-fullwidth">
-    <thead>
-      <tr>
-        <th>Darba veids</th>
-        <th>Darba apraksts</th>
-        <th>Cena</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="item in servicecar" v-bind:key="item">
-        <td>{{ item.work_type }}</td>
-        <td>{{ item.description }}</td>
-        <td>{{ item.work_price }}</td>
-      </tr>
-    </tbody>
-  </table>
-  <div class="columns">
-    <div class="column">
-      <h4 class="is-size-4 has-text-left">
-        Par darbu kopā: <strong>{{ getFullServicePrice }}</strong> euro. Summa
-        ir ar 21% nodokli.
-      </h4>
-    </div>
-  </div>
-  <hr />
-  <div class="columns">
-    <div class="column">
-      <h4 class="is-size-4 has-text-left">Kopā: <strong>{{ getFullPrice }}</strong> euro</h4>
-    </div>
-    <div class="column">
-      <h4 class="is-size-4 has-text-left">
-        Vārdiem: <input v-model="priceInWords" />
-      </h4>
-    </div>
-  </div>
-  <hr />
+
+
   <div class="columns">
     <div class="column">
       <h2 class="is-size-2 has-text-left">Darbs noslēgšana</h2>
@@ -213,33 +131,40 @@ export default {
     this.getParts();
   },
   computed: {
-    getFullPartPrice() {
+    
+  },
+  methods: {
+    getFullPartPrice(tax) {
       const formatter = new Intl.NumberFormat("en-US", {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
         style: "decimal",
         useGrouping: false,
       });
-      return formatter.format(
+      return tax === true ? formatter.format(
         this.partscar.reduce((p, all) => p + parseInt(all.full_price), 0) +
           this.partscar.reduce((p, all) => p + parseInt(all.full_price), 0) *
             0.21
+      ) : formatter.format(
+        this.partscar.reduce((p, all) => p + parseInt(all.full_price), 0)
       );
     },
-    getFullServicePrice() {
+    getFullServicePrice(tax) {
       const formatter = new Intl.NumberFormat("en-US", {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
         style: "decimal",
         useGrouping: false,
       });
-      return formatter.format(
+      return tax === true ? formatter.format(
         this.servicecar.reduce((p, all) => p + parseInt(all.work_price), 0) +
           this.servicecar.reduce((p, all) => p + parseInt(all.work_price), 0) *
             0.21
+      ) : formatter.format(
+        this.servicecar.reduce((p, all) => p + parseInt(all.work_price), 0)
       );
     },
-    getFullPrice() {
+    getFullPrice(tax) {
       const formatter = new Intl.NumberFormat("en-US", {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
@@ -247,11 +172,14 @@ export default {
         useGrouping: false,
       });
       return formatter.format(
-        parseFloat(this.getFullServicePrice) + parseFloat(this.getFullPartPrice)
+        parseFloat(this.getFullServicePrice(tax)) + parseFloat(this.getFullPartPrice(tax))
       );
     },
-  },
-  methods: {
+    getFullCount() {
+      let spend_count = this.servicecar.reduce((p, all) => p + parseInt(all.spend_time), 0);
+      let part_count = this.partscar.reduce((p, all) => p + parseInt(all.part_count), 0);
+      return parseInt(spend_count) + parseInt(part_count);
+    },
     convertDate(date) {
       this.date = new Date(date);
       return this.date.toLocaleDateString("lv-LV");
@@ -261,6 +189,7 @@ export default {
         .get(`/customer/orderdata/${this.$route.params.id}`)
         .then((res) => {
           this.customer = res.data.info[0];
+          console.log(res.data.info[0])
         })
         .catch((error) => {
           console.log(error);
@@ -287,11 +216,17 @@ export default {
         });
     },
     async getPdfTest() {
+      let full_no_tax = this.getFullPrice(false);
+      let full_tax = this.getFullPrice(true);
+      let tax = full_tax - full_no_tax;
       let payload = {
-        full_service_price: this.getFullServicePrice,
-        full_part_price: this.getFullPartPrice,
+        full_service_price: this.getFullServicePrice(false),
+        full_part_price: this.getFullPartPrice(false),
+        full_count: this.getFullCount(),
+        full_tax: tax,
         pay_option: this.payOption,
-        full_price: this.getFullPrice,
+        full_price_no_tax: full_no_tax,
+        full_price: full_tax,
         price_in_words: this.priceInWords,
         order_id: this.$route.params.id,
       };

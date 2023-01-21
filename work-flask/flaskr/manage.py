@@ -54,9 +54,13 @@ def customer_edit(id):
         customer_type_data = json_data['edit_customer_type']
         customer_number = json_data['edit_customer_number']
         customer_street = json_data['edit_customer_street']
+        customer_bank_name = json_data['edit_customer_name']
+        customer_bank_acc = json_data['edit_customer_bank_acc']
         customer_type.customer_type = customer_type_data
         customer_type.customer_number = customer_number
         customer_type.customer_street = customer_street
+        customer_type.customer_bank_name = customer_bank_name
+        customer_type.customer_bank_acc = customer_bank_acc
         customer.customer_name = customer_name
         customer.phone = phone
         db.session.commit()
@@ -69,10 +73,12 @@ def customer_type_reg(id):
         customer_type = json_data['customer_type']
         customer_number = json_data['customer_number']
         customer_street = json_data['customer_street']
+        customer_bank_name = json_data['customer_bank_name']
+        customer_bank_acc = json_data['customer_bank_acc']
         customer = CustomerType.query.filter_by(customer_number=customer_number).first()
         
         if customer is None:
-            new_cust_type = CustomerType(customer_type, customer_number, customer_street, create_date=datetime.datetime.now(), customer_id=id)
+            new_cust_type = CustomerType(customer_type, customer_number, customer_street, customer_bank_name, customer_bank_acc, create_date=datetime.datetime.now(), customer_id=id)
             db.session.add(new_cust_type)
             db.session.commit()
             return jsonify(status="new_customer_type")
@@ -224,6 +230,9 @@ def add_Order_data():
         full_service_price = json_data['full_service_price']
         full_part_price = json_data['full_part_price']
         pay_option = json_data['pay_option']
+        full_price_no_tax = json_data['full_price_no_tax']
+        full_count = json_data['full_count']
+        full_tax = json_data['full_tax']
         full_price = json_data['full_price']
         price_in_words = json_data['price_in_words']
         order_id = json_data['order_id']
@@ -231,6 +240,9 @@ def add_Order_data():
             full_service_price,
             full_part_price,
             pay_option,
+            full_price_no_tax,
+            full_count,
+            full_tax,
             full_price,
             price_in_words,
             order_id
@@ -261,6 +273,8 @@ def order_data():
             car_order.name,
             customer_type_data.customer_number,
             customer_type_data.customer_street,
+            customer_type_data.customer_bank_name,
+            customer_type_data.customer_bank_acc,
             create_out=datetime.datetime.now(),
             )
         db.session.add(new_order_data)
