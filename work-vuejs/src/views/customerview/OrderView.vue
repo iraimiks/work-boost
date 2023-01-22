@@ -56,17 +56,6 @@
     v-bind:class="{ 'block-show': !show }"
   >
     <div class="field">
-      <label class="label">Darba veids</label>
-      <div class="control">
-        <div class="select">
-          <select v-model="worktype">
-            <option>Diagnostika</option>
-            <option>Remonts</option>
-          </select>
-        </div>
-      </div>
-    </div>
-    <div class="field">
       <label class="label">Apraksts</label>
       <div class="control">
         <input class="input is-success" type="text" v-model="description" />
@@ -151,17 +140,6 @@
       </div>
     </div>
     <div class="field">
-      <label class="label">Darba veids</label>
-      <div class="control">
-        <div class="select">
-          <select v-model="serviceEditObj.work_type">
-            <option>Diagnostika</option>
-            <option>Remonts</option>
-          </select>
-        </div>
-      </div>
-    </div>
-    <div class="field">
       <label class="label">Apraksts</label>
       <div class="control">
         <input
@@ -240,7 +218,6 @@
     <thead>
       <tr>
         <th>ID</th>
-        <th>Darba veids</th>
         <th>Apraksts</th>
         <th>Darba laiks</th>
         <th>Darba samaksa</th>
@@ -251,7 +228,6 @@
     <tbody>
       <tr v-for="item in servicecar" v-bind:key="item">
         <td>{{ item.id }}</td>
-        <td>{{ item.work_type }}</td>
         <td>{{ item.description }}</td>
         <td>{{ item.spend_time }}</td>
         <td>{{ item.work_price }}</td>
@@ -468,7 +444,6 @@ export default {
       partForm: false,
       servicecar: [],
       partscar: [],
-      worktype: "",
       spendtime: 0,
       partname: "",
       partcount: 0,
@@ -659,7 +634,6 @@ export default {
     },
     async createService() {
       let payload = {
-        work_type: this.worktype,
         description: this.description,
         spend_time: this.spendtime,
         work_price: this.getWorkPrice,
@@ -681,7 +655,6 @@ export default {
     },
     async editRowData() {
       let payload = {
-        work_type: this.serviceEditObj.work_type,
         description: this.serviceEditObj.description,
         spend_time: this.serviceEditObj.spend_time,
         work_price: this.getFullServiceEditPrice,

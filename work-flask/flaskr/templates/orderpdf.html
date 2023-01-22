@@ -11,7 +11,7 @@
   <style>
     body {
       font-family: "Times New Roman", Times, serif;
-      font-size: 0.7em;
+      font-size: 0.68em;
     }
   </style>
 </head>
@@ -71,7 +71,7 @@
         <tr>
           <th>Nosaukums</th>
           <th>Mērv.</th>
-          <th>Daudz.</th>
+          <th>Daudzums</th>
           <th>Cena</th>
           <th>Summa</th>
         </tr>
@@ -89,17 +89,17 @@
       </tbody>
       <thead>
         <tr>
-          <th>Darbs</th>
-          <th>Nosaukums.</th>
-          <th colspan="2">Daudz.</th>
+          <th>Nosaukums</th>
+          <th>Mērv.</th>
+          <th colspan="2">Daudzums</th>
           <th>Summa</th>
         </tr>
       </thead>
       <tbody>
         {% for service in services %}
         <tr>
-          <td>{{ service['work_type'] }}</td>
           <td>{{ service['description'] }}</td>
+          <td>st.</td>
           <td colspan="2">{{ service['spend_time'] }}</td>
           <td>€ {{ "%.2f"|format(service['work_price']|float) }}</td>
         </tr>
@@ -113,7 +113,7 @@
       <tbody>
         <tr >
           <td colspan="2"> Kopā:</td>
-          <td colspan="2">{{ orderdata['full_count'] }}</td>
+          <td colspan="2"></td>
           <td>€ {{ "%.2f"|format(orderdata['full_price_no_tax']|float) }}</td>
         </tr>
       </tbody>
@@ -133,8 +133,8 @@
     </table>
   </div>
   <hr>
-  <h3>Rēķins sagatavots elektronisķi,deerīgs bez paraksta un zīmoga, </h3>
-  <h3>saskaņā arLatvijas Republikas Grāmatvedības likuma 11.p.8d.1p</h3>
+  <p>Rēķins sagatavots elektronisķi, deerīgs bez paraksta un zīmoga, 
+  saskaņā ar Latvijas Republikas Grāmatvedības likuma 11.p.8d.1p</p>
   <div class="row">
     <div class="col">
       Preču nosūtītājs: <strong>AUTOBOOST SIA</strong>

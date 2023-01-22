@@ -298,11 +298,9 @@ def service_edit(id):
     service_car = ServiceCar.query.get(id)
     if request.method == 'POST':
         json_data = request.get_json()
-        work_type = json_data['work_type']
         description = json_data['description']
         spend_time = json_data['spend_time']
         work_price = json_data['work_price']
-        service_car.work_type = work_type
         service_car.description = description
         service_car.spend_time = spend_time
         service_car.work_price = work_price
@@ -330,11 +328,10 @@ def part_edit(id):
 def car_service(id):
     if request.method == 'POST':
         json_data = request.get_json()
-        work_type = json_data['work_type']
         description = json_data['description']
         spend_time = json_data['spend_time']
         work_price = json_data['work_price']
-        new_service = ServiceCar(work_type, spend_time, work_price, description, create_date=datetime.datetime.now(), order_id=id)
+        new_service = ServiceCar(spend_time, work_price, description, create_date=datetime.datetime.now(), order_id=id)
         db.session.add(new_service)
         db.session.commit()
         return jsonify(status="car_service_reg")

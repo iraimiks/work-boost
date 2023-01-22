@@ -108,14 +108,12 @@ class Order(db.Model):
 
 class ServiceCar(db.Model):
     id = db.Column(db.Integer(), primary_key=True, autoincrement=True)
-    work_type = db.Column(db.String(length=50))
     spend_time = db.Column(db.String(length=50))
     description = db.Column(db.String(length=50))
     work_price = db.Column(db.Float())
     create_date = db.Column(db.DateTime)
     order_id = db.Column(db.Integer(), db.ForeignKey('order.id'), nullable=False)
-    def __init__(self, work_type, spend_time, work_price, description, create_date, order_id):
-        self.work_type = work_type
+    def __init__(self, spend_time, work_price, description, create_date, order_id):
         self.spend_time = spend_time
         self.work_price = work_price
         self.description = description
@@ -126,7 +124,6 @@ class ServiceCar(db.Model):
     def serialized(self):
         return {
             'id': self.id,
-            'work_type': self.work_type,
             'spend_time': self.spend_time,
             'description': self.description,
             'work_price': format(float(self.work_price), '.2f'),
