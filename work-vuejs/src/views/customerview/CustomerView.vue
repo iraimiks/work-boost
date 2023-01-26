@@ -216,9 +216,6 @@
             v-model="carnumber"
           />
         </div>
-        <p class="help is-success" v-bind:class="{ 'block-show': numberexist }">
-          Registrēts auto numurs
-        </p>
       </div>
       <div class="field">
         <label class="label">VIN numurs</label>
@@ -269,7 +266,8 @@
       <tr v-for="item in cars" v-bind:key="item">
         <td>{{ item.id }}</td>
         <td>{{ item.brand }}</td>
-        <td>{{ item.number }}</td>
+        <td v-if="item.number === ''">- - -</td>
+        <td v-else>{{ item.number }}</td>
         <td v-if="item.vinnumber === ''">- - -</td>
         <td v-else>{{ item.vinnumber }}</td>
         <td v-if="item.odometer === ''">- - -</td>
@@ -308,7 +306,6 @@ export default {
       show: false,
       showEdit: false,
       showDataForm: false,
-      numberexist: true,
       customer: {},
       customer_data: {},
       carbrand: "",
@@ -375,7 +372,6 @@ export default {
           },
         })
         .then((res) => {
-          console.log(res);
           this.reloadpage();
         })
         .catch((error) => {
@@ -418,12 +414,7 @@ export default {
           },
         })
         .then((res) => {
-          if (res.data.status === "exist_car") {
-            this.numberexist = false;
-          } else {
             this.reloadpage();
-          }
-          console.log(res);
         })
         .catch((error) => {
           console.log(error);

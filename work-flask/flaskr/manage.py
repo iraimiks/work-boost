@@ -93,14 +93,11 @@ def customer_car_reg(id):
         number = json_data['carnumber']
         vinnumber = json_data['vinnumber']
         odometer = json_data['odometer']
-        car_number = Car.query.filter_by(number=number).first()
-        if car_number is None:
-            new_cust_car = Car(brand, number, vinnumber, odometer, create_date=datetime.datetime.now(), customer_id=id)
-            db.session.add(new_cust_car)
-            db.session.commit()
-            return jsonify(status="carregister")
-        else:
-            return jsonify(status="exist_car", car=car_number.number)
+        new_cust_car = Car(brand, number, vinnumber, odometer, create_date=datetime.datetime.now(), customer_id=id)
+        db.session.add(new_cust_car)
+        db.session.commit()
+        return jsonify(status="carregister")
+
 
 @bp.route('/cardel', methods=('GET', 'POST'))
 def car_delet():
