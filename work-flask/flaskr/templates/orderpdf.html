@@ -8,10 +8,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=PT+Sans&display=swap" rel="stylesheet"> 
   <style>
     body {
-      font-family: "Times New Roman", Times, serif;
+      font-family:  "Gill Sans", sans-serif;
       font-size: 0.68em;
+      margin: 0 auto;
+    }
+    .p-style {
+      margin: 0;
+      padding: 0;
+    }
+    .col-margin {
+      margin: 5px;
+    }
+    .border-footer {
+      border-radius: 5px;
+      border: 1px solid black;
+      padding: 10px; 
     }
   </style>
 </head>
@@ -25,44 +41,23 @@
     </div>
     <hr>
     <div class="row">
-      <div class="col">
+      <div class="col col-margin">
         Izrakstīšanas datums: <strong>{{ today }}</strong>
       </div>
     </div>
     <div class="row">
-      <div class="col">
-        Pakalpojuma saņēmējs: <strong>{{ order['customer_name'] }}</strong>
+      <div class="col border-footer col-margin">
+        <p class="p-style" >Pakalpojuma saņēmējs: <strong>{{ order['customer_name'] }}</strong></p>
+        <p class="p-style" >Addrese: <strong>{{ order['customer_street'] }}</strong></p>
+        <p class="p-style" >Preču saņemšanas vieta: <strong>LIEPĀJAS IELA 5 LUDZA</strong></p>
+        <p class="p-style" >Auto: <strong>{{ order['brand'] }} - {{ order['number'] }}</strong></p>
       </div>
-      <div class="col text-end">
-        <strong>{{ order['customer_number'] }}</strong>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        Addrese: <strong>{{ order['customer_street'] }}</strong>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        Norēķinu rekvizīti: <strong>{{ order['customer_bank_name'] }}</strong>
-      </div>
-      <div class="col text-end">
-        <strong>{{ order['customer_bank_acc'] }}</strong>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        Preču saņemšanas vieta: <strong>LIEPĀJAS IELA 5 LUDZA</strong>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        Auto: <strong>{{ order['brand'] }} - {{ order['number'] }}</strong>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        Apmaksas veids un kārtība: <strong>{{ orderdata['pay_option'] }}</strong>
+      <div class="col border-footer col-margin">
+        <h4 class="p-style"><strong>Norēķinu rekvizīti:</strong></h4>
+        <p class="p-style" >{{ order['customer_bank_name'] }}</p>
+        <p class="p-style" >{{ order['customer_bank_acc'] }}</p>
+        <p class="p-style" >{{ order['customer_number'] }}</p>
+        <p class="p-style" >Apmaksas veids un kārtība: <strong>{{ orderdata['pay_option'] }}</strong></p>
       </div>
     </div>
     <hr>
@@ -135,30 +130,33 @@
   <hr>
   <p>Rēķins sagatavots elektronisķi, deerīgs bez paraksta un zīmoga, 
   saskaņā ar Latvijas Republikas Grāmatvedības likuma 11.p.8d.1p</p>
-  <div class="row">
+  <div class="row border-footer">
     <div class="col">
-      Preču nosūtītājs: <strong>AUTOBOOST SIA</strong>
+      <h4 class="p-style"><strong>Adrese:</strong></h4>
+      <p class="p-style">AUTOBOOST SIA</p>
+      <p class="p-style">Liepājas iela 5</p>
+      <p class="p-style">LV-5701 Ludza</p>
+      <p class="p-style">Latvia</p>
     </div>
     <div class="col">
-      <strong>LV40203418867</strong>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col">
-      Adrese: <strong>Liepājas iela 5 Ludza</strong>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col">
-      Norēķinu rekvizīti: <strong>Citadele banka</strong>
+      <h4 class="p-style"><strong>Tālrunis:</strong></h4>
+      <p class="p-style">+371 27015660</p>
+      <h4 class="p-style"><strong>Mājas lapa:</strong></h4>
+      <p class="p-style">https://autoboost.lv/</p>
     </div>
     <div class="col">
-      Bankas konts: <strong>LV47PARX0027844410001</strong>
+      <h4 class="p-style"><strong>Reģistrācijas Nr.:</strong></h4>
+      <p class="p-style">40203418867</p>
+      <h4 class="p-style"><strong>PVN Nr:</strong></h4>
+      <p class="p-style">LV40203418867</p>
     </div>
-  </div>
-  <div class="row">
     <div class="col">
-      Preču izsniegšanas vieta: <strong>Liepājas iela 5 Ludza</strong>
+      <h4 class="p-style"><strong>Banka:</strong></h4>
+      <p class="p-style">Citadele banka</p>
+      <h4 class="p-style"><strong>IBAN:</strong></h4>
+      <p class="p-style">LV47PARX0027844410001</p>
+      <h4 class="p-style"><strong>SWIFT:</strong></h4>
+      <p class="p-style">PARXLV22</p>
     </div>
   </div>
 </body>
