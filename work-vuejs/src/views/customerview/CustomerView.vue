@@ -36,6 +36,9 @@
       <a @click="showDataFormBlock(showDataForm)" class="card-footer-item"
         >Pievienot datus klienta</a
       >
+      <form @submit.prevent="deleteCustomer" method="POST">
+        <button class="card-footer-item button is-danger">Dzēst klientu</button>
+      </form>
     </footer>
   </div>
   <div class="card" v-bind:class="{ 'block-show': !showEdit }">
@@ -249,6 +252,12 @@
     <div class="column">
       <h2 class="title">Klienta auto</h2>
     </div>
+    <div class="column" v-bind:class="{ 'block-show': !showWarrning }">
+      <div class="notification is-danger">Eksistē pasūtījums</div>
+    </div>
+    <div class="column" v-bind:class="{ 'block-show': !showCarWarrning }">
+      <div class="notification is-danger">Eksistē auto</div>
+    </div>
   </div>
   <table class="table is-fullwidth">
     <thead>
@@ -306,6 +315,8 @@ export default {
       show: false,
       showEdit: false,
       showDataForm: false,
+      showWarrning: false,
+      showCarWarrning: false,
       customer: {},
       customer_data: {},
       carbrand: "",
@@ -355,6 +366,27 @@ export default {
           console.log(error);
         });
     },
+    async deleteCustomer() {
+      let payload = {
+        customer_id: this.customer.id,
+      };
+      await axios
+        .post(`/customer/customerdel`, payload, {
+          headers: {
+            "Content-type": "application/json",
+          },
+        })
+        .then((res) => {
+          if (res.data.status === "customer_delete") {
+            window.location.href = "/dashboard/customers";
+          } else {
+            this.showCarWarrningBlock(false);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
     async editCustomerData() {
       let payload = {
         edit_name: this.customer.name,
@@ -392,8 +424,7 @@ export default {
           if (res.data.status === "car_delete") {
             this.reloadpage();
           } else {
-            //need thing about how to improve error messaging
-            console.log("somthing wrong");
+            this.showWarrningBlock(false);
           }
         })
         .catch((error) => {
@@ -414,7 +445,7 @@ export default {
           },
         })
         .then((res) => {
-            this.reloadpage();
+          this.reloadpage();
         })
         .catch((error) => {
           console.log(error);
@@ -450,6 +481,12 @@ export default {
     },
     showDataFormBlock(check) {
       this.showDataForm = !check;
+    },
+    showWarrningBlock(check) {
+      this.showWarrning = !check;
+    },
+    showCarWarrningBlock(check) {
+      this.showCarWarrning = !check;
     },
     reloadpage() {
       window.location.reload();

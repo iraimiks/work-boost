@@ -3,3 +3,5 @@ venv
 config.py
 configdev.py
 migrations
+work-flask/flaskr/__init__.pyc
+work-flask/config.pyc

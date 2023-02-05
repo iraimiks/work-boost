@@ -1,5 +1,5 @@
 <template>
-<div>
+  <div>
     <h2 class="title">Darbinieki</h2>
     <div class="field is-horizontal">
       <div class="field-label is-normal">
@@ -8,7 +8,12 @@
       <div class="field-body">
         <div class="field">
           <p class="control">
-            <input class="input" v-model="searchWord" type="text" placeholder="Meklēt darbinieku" />
+            <input
+              class="input"
+              v-model="searchWord"
+              type="text"
+              placeholder="Meklēt darbinieku"
+            />
           </p>
         </div>
       </div>
@@ -30,7 +35,7 @@
           <td>{{ item.phone }}</td>
           <td>{{ item.create_date }}</td>
           <td>
-            <router-link :to="'/dashboard/customers/' + item.id "
+            <router-link :to="'/dashboard/customers/' + item.id"
               >Darbinieka lapa</router-link
             >
           </td>
@@ -43,7 +48,7 @@
           <td>{{ item.phone }}</td>
           <td>{{ item.create_date }}</td>
           <td>
-            <router-link :to="'/dashboard/customers/' + item.id "
+            <router-link :to="'/dashboard/customers/' + item.id"
               >Darbinieka lapa</router-link
             >
           </td>
@@ -53,21 +58,24 @@
   </div>
 </template>
 <script>
-import axios from 'axios'
+import axios from "axios";
+
 export default {
   name: "WorkersView",
   data() {
     return {
       workers: [],
-      searchWord: ''
+      searchWord: "",
     };
   },
   computed: {
     filterWorkers() {
-      return this.workers.filter(worker => {
-        return worker.name.toLowerCase().indexOf(this.searchWord.toLowerCase()) != -1;
+      return this.workers.filter((worker) => {
+        return (
+          worker.name.toLowerCase().indexOf(this.searchWord.toLowerCase()) != -1
+        );
       });
-    }
+    },
   },
   mounted() {
     this.getWorkers();

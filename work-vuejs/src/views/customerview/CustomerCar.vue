@@ -89,6 +89,9 @@
     <div class="column">
       <h2 class="title">Auto pasūtījumi</h2>
     </div>
+    <div class="column" v-bind:class="{ 'block-show': !showWarrning }">
+      <div class="notification is-danger">Eksistē darbs</div>
+    </div>
   </div>
   <hr />
   <div class="field">
@@ -172,6 +175,7 @@ export default {
       carorders: [],
       show: false,
       showEdit: false,
+      showWarrning: false,
       worker: "",
     };
   },
@@ -215,8 +219,7 @@ export default {
           if (res.data.status === "order_delete") {
             this.reloadpage();
           } else {
-            //need thing about how to improve error messaging
-            console.log("somthing wrong");
+            this.showWarrningBlock(false);
           }
         })
         .catch((error) => {
@@ -280,6 +283,9 @@ export default {
     },
     showBlock(check) {
       this.show = !check;
+    },
+    showWarrningBlock(check) {
+      this.showWarrning = !check;
     },
     convertDate(date) {
       this.date = new Date(date);

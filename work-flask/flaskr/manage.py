@@ -24,7 +24,22 @@ def hello_pdf(id):
         html = render_template('orderpdf.html', order=order, parts=parts, services=services, orderdata=orderdata, today=time.strftime("%d/%m/%y"))
     return render_pdf(HTML(string=html))
 
-
+@bp.route('/customerdel', methods=('GET', 'POST'))
+def customer_delet():
+    if request.method == 'POST':
+        json_data = request.get_json()
+        customerid = json_data['customer_id']
+        customer = Customer.query.filter_by(id=int(customerid)).first()
+        customer_type = CustomerType.query.filter_by(id=str(customer.id)).first()
+        car_exist = Car.query.filter_by(customer_id=str(customer.id)).first()
+        if  car_exist is None:
+            db.session.delete(customer)
+            if customer_type is not None:
+                db.session.delete(customer_type)
+            db.session.commit()
+            return jsonify(status="customer_delete")
+        else:
+            return jsonify(status="customer_exist_car")
 
 @bp.route('/reg', methods=('GET', 'POST'))
 def customer_reg():
@@ -103,11 +118,15 @@ def customer_car_reg(id):
 def car_delet():
     if request.method == 'POST':
         json_data = request.get_json()
-        car_id = json_data['car_id']
-        car = Car.query.get(int(car_id))
-        db.session.delete(car)
-        db.session.commit()
-        return jsonify(status="car_delete")
+        carid = json_data['car_id']
+        car = Car.query.get(int(carid))
+        order_exist = Order.query.filter_by(car_id=str(car.id)).first()
+        if  order_exist is None:
+            db.session.delete(car)
+            db.session.commit()
+            return jsonify(status="car_delete")
+        else:
+            return jsonify(status="order_exist")
 
 
 @bp.route('/caredit/<id>', methods=('GET', 'POST'))
@@ -216,9 +235,15 @@ def del_order():
         json_data = request.get_json()
         order_id = json_data['order_id']
         order = Order.query.get(int(order_id))
-        db.session.delete(order)
-        db.session.commit()
-        return jsonify(status="order_delete")
+        service_exist = ServiceCar.query.filter_by(order_id=order.id).first()
+        parts_exist = PartCar.query.filter_by(order_id=order.id).first()
+        if parts_exist is None and service_exist is None:
+            db.session.delete(order)
+            db.session.commit()
+            return jsonify(status="order_delete")
+        else:
+            return jsonify(status="service_or_part_exist")
+
 
 @bp.route('/addorderdata', methods=('GET', 'POST'))
 def add_Order_data():
