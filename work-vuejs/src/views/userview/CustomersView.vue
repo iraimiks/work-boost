@@ -55,8 +55,6 @@ export default {
         .get("/customer/list")
         .then((res) => {
           this.customers = res.data.customers;
-          this.getPages(1);
-          this.currentPageEvent(1);
         })
         .catch((error) => {
           console.log(error);

@@ -18,7 +18,6 @@ class CustomerType(db.Model):
         self.customer_bank_acc = customer_bank_acc
         self.create_date = create_date
         self.customer_id = customer_id
-
     
     @property
     def serialized(self):

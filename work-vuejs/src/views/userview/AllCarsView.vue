@@ -71,8 +71,6 @@ export default {
         .get("/customer/cars")
         .then((res) => {
           this.cars = res.data.cars;
-          this.getPages(1);
-          this.currentPageEvent(1);
         })
         .catch((error) => {
           console.log(error);

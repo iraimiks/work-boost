@@ -30,12 +30,16 @@ def customer_delet():
         json_data = request.get_json()
         customerid = json_data['customer_id']
         customer = Customer.query.filter_by(id=int(customerid)).first()
-        customer_type = CustomerType.query.filter_by(id=str(customer.id)).first()
+        print(customer.id)
+        customer_type = CustomerType.query.filter_by(customer_id=customer.id).first()
         car_exist = Car.query.filter_by(customer_id=str(customer.id)).first()
-        if  car_exist is None:
-            db.session.delete(customer)
+        if car_exist is None:
             if customer_type is not None:
                 db.session.delete(customer_type)
+                db.session.commit()
+            else:
+                db.session.delete(customer)
+            db.session.delete(customer)
             db.session.commit()
             return jsonify(status="customer_delete")
         else:
@@ -91,7 +95,6 @@ def customer_type_reg(id):
         customer_bank_name = json_data['customer_bank_name']
         customer_bank_acc = json_data['customer_bank_acc']
         customer = CustomerType.query.filter_by(customer_number=customer_number).first()
-        
         if customer is None:
             new_cust_type = CustomerType(customer_type, customer_number, customer_street, customer_bank_name, customer_bank_acc, create_date=datetime.datetime.now(), customer_id=id)
             db.session.add(new_cust_type)
@@ -180,7 +183,10 @@ def customer(id):
 def customer_data(id):
     if request.method == 'GET':
         customer = CustomerType.query.filter_by(customer_id=id).first()
-        return jsonify({'customer_data': [customer.serialized]})
+        if customer is None:
+            return jsonify({'customer_data': 'no_data'})
+        else:
+            return jsonify({'customer_data': [customer.serialized]})
 
 @bp.route('/workers', methods=('GET', 'POST'))
 def workers():
@@ -200,7 +206,6 @@ def status_work():
         cars = Car.query.order_by(desc("id")).all()
         car_ids = [str(car.id) for car in cars]
         orders = db.session.query(Order).filter(Order.car_id.in_(car_ids))
-        print(orders)
         return  jsonify({'orders':[order.serialized for order in orders]})
 
 @bp.route('/finishwork/<id>', methods=('GET', 'POST'))
