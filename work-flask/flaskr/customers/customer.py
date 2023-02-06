@@ -133,7 +133,7 @@ class ServiceCar(db.Model):
 class PartCar(db.Model):
     id = db.Column(db.Integer(), primary_key=True, autoincrement=True)
     part_name = db.Column(db.String(length=50))
-    part_count = db.Column(db.Integer())
+    part_count = db.Column(db.Float())
     part_price = db.Column(db.Float())
     full_price = db.Column(db.Float())
     create_date = db.Column(db.DateTime)

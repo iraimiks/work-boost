@@ -76,7 +76,11 @@
         <tr>
           <td>{{ part['part_name'] }}</td>
           <td>gab.</td>
-          <td>{{ part['part_count'] }}</td>
+          {% if (part['part_count']|string).count('.0') == 1 %}
+            <td>{{ "%d"|format(part['part_count']) }}</td>
+          {% else %}
+            <td>{{ "%.2f"|format(part['part_count']) }}</td>
+          {% endif %}
           <td>€ {{ "%.2f"|format(part['part_price']) }}</td>
           <td>€ {{ "%.2f"|format(part['full_price']|float) }}</td>
         </tr>
