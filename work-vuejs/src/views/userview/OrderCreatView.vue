@@ -142,11 +142,11 @@ export default {
         useGrouping: false,
       });
       return tax === true ? formatter.format(
-        this.partscar.reduce((p, all) => p + parseInt(all.full_price), 0) +
-          this.partscar.reduce((p, all) => p + parseInt(all.full_price), 0) *
+        this.partscar.reduce((p, all) => p + parseFloat(all.full_price), 0) +
+          this.partscar.reduce((p, all) => p + parseFloat(all.full_price), 0) *
             0.21
       ) : formatter.format(
-        this.partscar.reduce((p, all) => p + parseInt(all.full_price), 0)
+        this.partscar.reduce((p, all) => p + parseFloat(all.full_price), 0)
       );
     },
     getFullServicePrice(tax) {
@@ -157,11 +157,11 @@ export default {
         useGrouping: false,
       });
       return tax === true ? formatter.format(
-        this.servicecar.reduce((p, all) => p + parseInt(all.work_price), 0) +
-          this.servicecar.reduce((p, all) => p + parseInt(all.work_price), 0) *
+        this.servicecar.reduce((p, all) => p + parseFloat(all.work_price), 0) +
+          this.servicecar.reduce((p, all) => p + parseFloat(all.work_price), 0) *
             0.21
       ) : formatter.format(
-        this.servicecar.reduce((p, all) => p + parseInt(all.work_price), 0)
+        this.servicecar.reduce((p, all) => p + parseFloat(all.work_price), 0)
       );
     },
     getFullPrice(tax) {
@@ -172,7 +172,7 @@ export default {
         useGrouping: false,
       });
       return formatter.format(
-        parseFloat(this.getFullServicePrice(tax)) + parseFloat(this.getFullPartPrice(tax))
+        parseFloat(parseFloat(this.getFullServicePrice(tax))) + parseFloat(this.getFullPartPrice(tax))
       );
     },
     getFullCount() {
@@ -189,7 +189,6 @@ export default {
         .get(`/customer/orderdata/${this.$route.params.id}`)
         .then((res) => {
           this.customer = res.data.info[0];
-          console.log(res.data.info[0])
         })
         .catch((error) => {
           console.log(error);
