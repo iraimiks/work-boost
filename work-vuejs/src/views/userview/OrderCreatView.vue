@@ -80,6 +80,7 @@
           <select v-model="payOption">
             <option>Pārskaitījums</option>
             <option>Ar karti</option>
+            <option>Skaidra nauda</option>
           </select>
         </div>
       </h3>
