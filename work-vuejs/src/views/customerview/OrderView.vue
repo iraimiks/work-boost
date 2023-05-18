@@ -284,7 +284,7 @@
         <input
           class="input is-success"
           type="text"
-          placeholder="0"
+          placeholder="1"
           v-model="partcount"
         />
       </div>
@@ -342,7 +342,7 @@
         <input
           class="input is-success"
           type="text"
-          placeholder="0"
+          placeholder="1"
           v-model="partEditObj.part_count"
         />
       </div>
@@ -448,7 +448,7 @@ export default {
       partscar: [],
       spendtime: 0,
       partname: "",
-      partcount: 0,
+      partcount: 1,
       partprice: 0,
       description: "",
       hourRate: 0,
