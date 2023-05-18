@@ -52,6 +52,7 @@ export default {
         .get("/customer/list")
         .then((res) => {
           this.customers = res.data.customers;
+          console.log(res);
         })
         .catch((error) => {
           console.log(error);
@@ -62,6 +63,7 @@ export default {
         .get("/customer/workers")
         .then((res) => {
           this.workers = res.data.workers;
+          console.log(res);
         })
         .catch((error) => {
           console.log(error);

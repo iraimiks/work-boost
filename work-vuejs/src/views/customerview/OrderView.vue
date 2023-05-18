@@ -84,6 +84,7 @@
               type="number"
               min="0"
               max="100"
+              step="0.01"
               v-model="hourRate"
               placeholder="0"
             />
@@ -173,7 +174,8 @@
               class="input"
               type="number"
               min="0"
-              max="100"
+              max="1000"
+              step="0.01"
               v-model="hourRateEdit"
               placeholder="0"
             />
