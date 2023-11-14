@@ -168,7 +168,8 @@ class AddOrderData(db.Model):
     full_price_no_tax = db.Column(db.String(length=50))
     price_in_words = db.Column(db.String(length=400))
     order_id = db.Column(db.Integer())
-    def __init__(self, full_service_price, full_part_price, pay_option, full_price_no_tax, full_count, full_tax, full_price, price_in_words, order_id):
+    street_service = db.Column(db.String(length=50))
+    def __init__(self, full_service_price, full_part_price, pay_option, full_price_no_tax, full_count, full_tax, full_price, price_in_words, order_id, street_service):
         self.full_service_price = full_service_price
         self.full_part_price = full_part_price
         self.pay_option = pay_option
@@ -178,6 +179,7 @@ class AddOrderData(db.Model):
         self.full_price = full_price
         self.price_in_words = price_in_words
         self.order_id = order_id
+        self.street_service = street_service
     @property
     def serialized(self):
         return {
@@ -191,6 +193,7 @@ class AddOrderData(db.Model):
             'full_price': self.full_price,
             'price_in_words': self.price_in_words,
             'order_id': self.order_id,
+            'street_service': self.street_service,
         }
 
 class OrderData(db.Model):

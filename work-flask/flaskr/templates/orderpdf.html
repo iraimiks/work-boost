@@ -49,7 +49,7 @@
       <div class="col border-footer col-margin">
         <p class="p-style" >Pakalpojuma saņēmējs: <strong>{{ order['customer_name'] }}</strong></p>
         <p class="p-style" >Addrese: <strong>{{ order['customer_street'] }}</strong></p>
-        <p class="p-style" >Preču saņemšanas vieta: <strong>LIEPĀJAS IELA 5 LUDZA</strong></p>
+        <p class="p-style" >Preču saņemšanas vieta: <strong>{{ orderdata['street_service'] }}</strong></p>
         <p class="p-style" >Auto: <strong>{{ order['brand'] }} - {{ order['number'] }}</strong></p>
       </div>
       <div class="col border-footer col-margin">

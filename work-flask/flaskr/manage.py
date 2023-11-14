@@ -263,6 +263,7 @@ def add_Order_data():
         full_price = json_data['full_price']
         price_in_words = json_data['price_in_words']
         order_id = json_data['order_id']
+        street_service = json_data['street_service']
         new_add_order_data = AddOrderData(
             full_service_price,
             full_part_price,
@@ -272,7 +273,8 @@ def add_Order_data():
             full_tax,
             full_price,
             price_in_words,
-            order_id
+            order_id,
+            street_service
         )
         db.session.add(new_add_order_data)
         db.session.commit()

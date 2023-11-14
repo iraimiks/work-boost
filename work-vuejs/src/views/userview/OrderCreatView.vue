@@ -36,7 +36,13 @@
   <div class="columns">
     <div class="column is-6 border-box">
       <h3 class="is-size-4 has-text-left">
-        Adrese: <strong>Liepājas iela 5 Ludza</strong>
+        Auto servisa addrese:
+        <div class="select">
+          <select v-model="streetService">
+            <option>Liepājas iela 5 Ludza</option>
+            <option>Varoņu iela 39 Rēzekne</option>
+          </select>
+        </div>
       </h3>
     </div>
   </div>
@@ -123,6 +129,7 @@ export default {
       servicecar: [],
       partscar: [],
       payOption: "",
+      streetService: "",
       priceInWords: "",
     };
   },
@@ -225,6 +232,7 @@ export default {
         full_count: this.getFullCount(),
         full_tax: tax,
         pay_option: this.payOption,
+        street_service: this.streetService,
         full_price_no_tax: full_no_tax,
         full_price: full_tax,
         price_in_words: this.priceInWords,
